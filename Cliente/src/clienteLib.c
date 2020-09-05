@@ -1,3 +1,5 @@
+#include "clienteLib.h"
+
 config_cliente* leer_config_cliente(){
 
 	t_config* config_aux = config_create("./ejemplo.config");

@@ -1,11 +1,12 @@
 #include "clienteLib.h"
+//#include "libreriaCompartida.h"
 
 
 
 int main(void){ // con argv y argc
 
-char* nombre_prueba = "ejemplo.config"; // Hay que ver como setear esto desde los parametros del main o consola
-
+//char* nombre_prueba = "ejemplo.config"; // Hay que ver como setear esto desde los parametros del main o consola
+printf("hola");
 configuracion_cliente = leer_config_cliente();
 
 

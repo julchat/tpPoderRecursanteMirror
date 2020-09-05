@@ -1,3 +1,6 @@
+#include "libreriaCompartida.h"
+
+
 int crear_conexion(char *ip, char* puerto)
 {
 	struct addrinfo hints;

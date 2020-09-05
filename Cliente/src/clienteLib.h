@@ -8,7 +8,7 @@
 #ifndef TP0_H_
 #define TP0_H_
 
-config_cliente configuracion_cliente;
+
 
 #include<stdio.h>
 #include<stdlib.h>
@@ -18,12 +18,13 @@ config_cliente configuracion_cliente;
 #include<readline/readline.h>
 
 #include "utils.h"
-#include "clienteLib.c"
 #include "estructuras.h"
-#include "../libreriaGeneral.h"
+
+
+config_cliente* configuracion_cliente;
 
 t_log* iniciar_logger(void);
-t_config* leer_config_cliente();
+config_cliente* leer_config_cliente();
 void leer_consola(t_log*);
 void paquete(int);
 void terminar_programa(int, t_log*, t_config*);
