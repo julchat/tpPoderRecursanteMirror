@@ -1,5 +1,5 @@
 #include "cliente.h"
-//#include "libreriaCompartida.h"
+#include "conexiones.h"
 
 int main(int argc, char *argv[]){
 
