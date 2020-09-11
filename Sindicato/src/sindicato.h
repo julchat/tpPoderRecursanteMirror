@@ -18,9 +18,7 @@
 
 #include "sindicatoLib.h"
 
-t_config* config;
-t_log* logger;
 
-
+void terminarPrograma();
 
 #endif /* SINDICATO_H_ */

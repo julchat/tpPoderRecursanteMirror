@@ -16,6 +16,7 @@
 #include<readline/readline.h>
 
 #include "utils.h"
+#include "conexiones.h"
 
 typedef struct {
 

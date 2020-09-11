@@ -15,6 +15,8 @@
 #include<commons/config.h>
 #include<readline/readline.h>
 
+#include "mensajes.h"
+
 typedef struct{
 
 	int PUERTO_ESCUCHA;

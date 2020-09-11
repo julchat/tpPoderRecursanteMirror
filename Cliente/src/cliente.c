@@ -7,6 +7,9 @@ int main(int argc, char *argv[]){
 	config = config_create("Cliente.config");
 	logger = log_create("Cliente.log", "Cliente", 1, LOG_LEVEL_INFO);
 
+	conexion_servidor();
+	crear_socket();
+
 	//configuracion_cliente = leer_config_cliente();
 
 /*while(1){
@@ -15,30 +18,7 @@ int main(int argc, char *argv[]){
 	return 0;
 }
 
-int connect_to_server(char* host,int port, void*(*callback)()){
 
-	int socket;
-	struct sockaddr_in server_addr;
-	server_addr.sin_family = AF_INET;
-	server_addr.sin_addr.s_addr = inet_addr(host);
-	server_addr.sin_port = htons(port);
-
-	socket = create_socket();
-	if(connect(socket,(struct sockaddr *)&server_addr, sizeof(server_addr))< 0){
-		perror("ERROR CONECTAR SERVIDOR");
-		return -errno;
-	}
-
-	if(callback != NULL)
-		callback();
-	return socket;
-
-}
-
-int create_socket(){
-
-	return socket(AF_INET, SOCK_STREAM, 0);
-}
 
 /*void wait_connection(int socket_client){
 

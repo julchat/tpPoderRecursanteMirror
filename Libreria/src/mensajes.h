@@ -15,8 +15,9 @@
 #include <unistd.h>
 #include <errno.h>
 
-typedef struct{
-	CONSULTAR_PLATOS, // @suppress("Type cannot be resolved")
+
+typedef enum{
+	CONSULTAR_PLATOS,
 	GUARDAR_PEDIDO,
 	GUARDAR_PLATO,
 	CONFIRMAR_PEDIDO,
@@ -25,7 +26,7 @@ typedef struct{
 	PLATO_LISTO,
 	TERMINAR_PEDIDO,
 	OBTENER_RECETA,
-	ERROR;
+	ERROR
 }t_header;
 
 typedef struct{
