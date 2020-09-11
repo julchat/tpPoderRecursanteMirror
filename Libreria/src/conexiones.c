@@ -6,7 +6,7 @@
  */
 #include "conexiones.h"
 
-int conexion_servidor(char* host, int port, void*(*callback)){
+int conexion_servidor(char* host, int port, void*(*callback)()){
 
 	int socket;
 	struct sockaddr_in server_addr;
