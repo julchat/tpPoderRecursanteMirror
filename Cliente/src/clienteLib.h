@@ -39,7 +39,7 @@ cliente_config* clientStruct;
 //void iniciar_logger_config();
 
 t_log* iniciar_logger(void);
-cliente_config* leer_config_cliente();
+cliente_config* leer_config_cliente(char*);
 void leer_consola(t_log*);
 void paquete(int);
 void terminar_programa(int, t_log*, t_config*);

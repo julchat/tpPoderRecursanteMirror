@@ -1,9 +1,9 @@
 #include "cliente.h"
-#include "conexiones.h"
-
+#include "conexiones.c"
+cliente_config* configCliente;
 int main(int argc, char *argv[]){
-
-	//iniciar_logger_config(); si uso esa funcion no se si sirve los argumentos que recibe el main!!!!!!
+	configCliente = leer_config_cliente(argv[1]);
+	/*//iniciar_logger_config(); si uso esa funcion no se si sirve los argumentos que recibe el main!!!!!!
 	config = config_create("Cliente.config");
 	logger = log_create("Cliente.log", "Cliente", 1, LOG_LEVEL_INFO);
 
@@ -15,6 +15,7 @@ int main(int argc, char *argv[]){
 /*while(1){
 	esperar_conexion();
 }*/
+
 	return 0;
 }
 

@@ -23,7 +23,7 @@
 #include "commons/config.h"
 #include "commons/log.h"
 
-#include "clienteLib.h"
+#include "clienteLib.c"
 
 t_config* config;
 t_log* logger;
