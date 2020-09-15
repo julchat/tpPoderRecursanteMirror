@@ -34,4 +34,17 @@ void wait_connection(int socket_client);
 int accept_client(int servidor);
 void ejecutarConsola();
 
+typedef enum{
+	APP = 0,
+	RESTAURANTE = 1,
+	SINDICATO = 2,
+	COMANDA = 3
+}t_dest;
+
+typedef struct{
+	t_header codOp;
+	t_dest destinatario;
+	t_param parametros;
+}parserMensaje;
+
 #endif /* CLIENTE_H_ */
