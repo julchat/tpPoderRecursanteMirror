@@ -1,8 +1,11 @@
 #include "cliente.h"
 #include "conexiones.c"
+#include <pthread.h>
 cliente_config* configCliente;
 int main(int argc, char *argv[]){
 	configCliente = leer_config_cliente(argv[1]);
+	pthread_t hiloConsola;
+	pthread_create(hiloConsola,0,ejecutarConsola,NULL);
 	/*//iniciar_logger_config(); si uso esa funcion no se si sirve los argumentos que recibe el main!!!!!!
 	config = config_create("Cliente.config");
 	logger = log_create("Cliente.log", "Cliente", 1, LOG_LEVEL_INFO);
@@ -12,13 +15,29 @@ int main(int argc, char *argv[]){
 
 	//configuracion_cliente = leer_config_cliente();
 
-/*while(1){
+while(1){
 	esperar_conexion();
 }*/
 
 	return 0;
 }
 
+
+void ejecutarConsola(){
+	char* leido;
+	leido = readline(">");
+	while(strcmp(leido,"")){
+		if(sintaxisValida(leido) && semanticaValida(leido)){
+			realizarEnvioMensaje(leido);
+		}else{
+			//aca quizas es logear en vez de printear
+			printf("mensaje invalido");
+		}
+		free(leido);
+		leido = readline(">");
+	}
+	free(leido);
+}
 
 
 /*void wait_connection(int socket_client){
