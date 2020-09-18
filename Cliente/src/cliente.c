@@ -40,6 +40,12 @@ void ejecutarConsola(){
 }
 
 
+
+
+
+}
+
+
 /*void wait_connection(int socket_client){
 
 	int cliente = accept_client(socket_client);

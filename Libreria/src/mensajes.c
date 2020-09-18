@@ -1,3 +1,5 @@
+#include "mensajes.h"
+
 /*
  * mensajes.c
  *

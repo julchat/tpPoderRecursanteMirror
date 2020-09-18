@@ -16,7 +16,9 @@
 #include<readline/readline.h>
 
 #include "utils.h"
-#include "conexiones.h"
+#include "conexiones.c"
+#include "mensajes.c"
+#include <commons/collections/list.h>
 
 typedef struct {
 
@@ -36,6 +38,21 @@ typedef struct {
 
 cliente_config* clientStruct;
 
+typedef enum{
+	APP = 0,
+	RESTAURANTE = 1,
+	SINDICATO = 2,
+	COMANDA = 3,
+	ERR = 4
+}t_dest;
+
+typedef struct{
+	t_header codOp;
+	t_dest destinatario;
+	char** parametros;
+}parserMensaje;
+
+
 //void iniciar_logger_config();
 
 t_log* iniciar_logger(void);
@@ -43,5 +60,9 @@ cliente_config* leer_config_cliente(char*);
 void leer_consola(t_log*);
 void paquete(int);
 void terminar_programa(int, t_log*, t_config*);
+bool sintaxisValida(char* mensaje);
+bool validarMatcheoOperacion(char* operacion, t_header* codigoPasadoPorReferencia);
+
+
 
 #endif /* TP0_H_ */
