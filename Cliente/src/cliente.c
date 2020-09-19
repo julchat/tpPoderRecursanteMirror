@@ -1,5 +1,4 @@
 #include "cliente.h"
-#include "conexiones.c"
 #include <pthread.h>
 cliente_config* configCliente;
 int main(int argc, char *argv[]){
@@ -27,11 +26,8 @@ void ejecutarConsola(){
 	char* leido;
 	leido = readline(">");
 	while(strcmp(leido,"")){
-		if(sintaxisValida(leido) && semanticaValida(leido)){
+		if(sintaxisYSemanticaValida(leido)){
 			realizarEnvioMensaje(leido);
-		}else{
-			//aca quizas es logear en vez de printear
-			printf("mensaje invalido");
 		}
 		free(leido);
 		leido = readline(">");
@@ -42,8 +38,6 @@ void ejecutarConsola(){
 
 
 
-
-}
 
 
 /*void wait_connection(int socket_client){

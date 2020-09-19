@@ -43,7 +43,8 @@ typedef enum{
 	RESTAURANTE = 1,
 	SINDICATO = 2,
 	COMANDA = 3,
-	ERR = 4
+	CLIENTE = 4,
+	ERR = 5
 }t_dest;
 
 typedef struct{
@@ -60,9 +61,14 @@ cliente_config* leer_config_cliente(char*);
 void leer_consola(t_log*);
 void paquete(int);
 void terminar_programa(int, t_log*, t_config*);
-bool sintaxisValida(char* mensaje);
+bool sintaxisYSemanticaValida(char* mensaje);
 bool validarMatcheoOperacion(char* operacion, t_header* codigoPasadoPorReferencia);
-
-
+bool validarMatcheoDestinatario(char* destinatario, t_dest* moduloALlenar);
+void obtenerModulosCompatiblesYcantParametrosRequerida(t_header codigoOperacion,t_dest moduloDestino,
+		t_list** modulosCompatibles, int* cantParametros);
+bool validarSemanticaMensaje(t_list* modulosCompatibles, int cantParametros, t_dest destinatario, t_list* parametros);
+char* obtenerOperacion(char*);
+char* obtenerDestinatario(char*);
+t_list* obtenerParametros(char*);
 
 #endif /* TP0_H_ */
