@@ -11,8 +11,8 @@ int main(int argc, char *argv[]){
 
 
 	pthread_t hiloConsola;
-	pthread_create(&hiloConsola,0,ejecutarConsola,NULL);
-
+	pthread_create(&hiloConsola,0,(void*)ejecutarConsola,NULL);
+	pthread_join(hiloConsola,NULL);
 
 	/*conexion_servidor();
 	crear_socket();

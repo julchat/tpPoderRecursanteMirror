@@ -25,6 +25,7 @@ bool sintaxisYSemanticaValida(char* mensaje){
 	char* operacion = obtenerOperacion(mensaje);
 	char* destinatario = obtenerDestinatario(mensaje);
 	t_list* parametros = obtenerParametros(mensaje);
+	printf("%s",destinatario);
 	t_header codigoOperacion;
 	t_dest moduloDestino;
 	t_list* modulosCompatibles = list_create();
