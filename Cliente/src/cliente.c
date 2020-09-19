@@ -1,15 +1,20 @@
 #include "cliente.h"
 #include <pthread.h>
+
 cliente_config* configCliente;
+t_log logger_config;
+
 int main(int argc, char *argv[]){
+
 	configCliente = leer_config_cliente(argv[1]);
+	logger_config = log_create("Cliente.log", "Cliente", 1, LOG_LEVEL_INFO);
+
+
 	pthread_t hiloConsola;
 	pthread_create(hiloConsola,0,ejecutarConsola,NULL);
-	/*//iniciar_logger_config(); si uso esa funcion no se si sirve los argumentos que recibe el main!!!!!!
-	config = config_create("Cliente.config");
-	logger = log_create("Cliente.log", "Cliente", 1, LOG_LEVEL_INFO);
 
-	conexion_servidor();
+
+	/*conexion_servidor();
 	crear_socket();
 
 	//configuracion_cliente = leer_config_cliente();

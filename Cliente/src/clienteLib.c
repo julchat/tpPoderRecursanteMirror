@@ -177,6 +177,7 @@ void obtenerModulosCompatiblesYcantParametrosRequerida(t_header codigoOperacion,
 		list_add(*modulosCompatibles, &moduloApp);
 		list_add(*modulosCompatibles, &moduloSindicato);
 		list_add(*modulosCompatibles, &moduloComanda);
+		break;
 	case CONSULTAR_PEDIDO:
 		*cantParametros = 1;
 		list_add(*modulosCompatibles, &moduloApp);
