@@ -21,8 +21,7 @@
 
 #include "commons/config.h"
 #include "commons/log.h"
-
-#include "clienteLib.c"
+#include "clienteLib.h"
 
 t_config* config;
 t_log* logger;

@@ -2,7 +2,7 @@
 #include <pthread.h>
 
 cliente_config* configCliente;
-t_log logger_config;
+t_log* logger_config;
 
 int main(int argc, char *argv[]){
 
@@ -11,7 +11,7 @@ int main(int argc, char *argv[]){
 
 
 	pthread_t hiloConsola;
-	pthread_create(hiloConsola,0,ejecutarConsola,NULL);
+	pthread_create(&hiloConsola,0,ejecutarConsola,NULL);
 
 
 	/*conexion_servidor();
@@ -32,7 +32,7 @@ void ejecutarConsola(){
 	leido = readline(">");
 	while(strcmp(leido,"")){
 		if(sintaxisYSemanticaValida(leido)){
-			realizarEnvioMensaje(leido);
+			//realizarEnvioMensaje(leido);
 		}
 		free(leido);
 		leido = readline(">");

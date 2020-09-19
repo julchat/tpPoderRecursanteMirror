@@ -13,11 +13,9 @@
 #include<commons/log.h>
 #include<commons/string.h>
 #include<commons/config.h>
-#include<readline/readline.h>
-
 #include "utils.h"
-#include "conexiones.c"
-#include "mensajes.c"
+#include "conexiones.h"
+#include "mensajes.h"
 #include <commons/collections/list.h>
 
 typedef struct {
