@@ -7,7 +7,7 @@ t_log* logger_config;
 int main(int argc, char *argv[]){
 
 	configCliente = leer_config_cliente(argv[1]);
-	logger_config = log_create("Cliente.log", "Cliente", 1, LOG_LEVEL_INFO);
+	//logger_config = log_create("Cliente.log", "Cliente", 1, LOG_LEVEL_INFO);
 
 
 	pthread_t hiloConsola;
@@ -22,6 +22,7 @@ int main(int argc, char *argv[]){
 while(1){
 	esperar_conexion();
 }*/
+
 
 	return 0;
 }
