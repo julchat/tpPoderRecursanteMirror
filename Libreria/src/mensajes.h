@@ -32,7 +32,9 @@ typedef enum{
 	FINALIZAR_PEDIDO = 12,
 	TERMINAR_PEDIDO = 13,
 	OBTENER_RECETA = 14,
-	ERROR = 15
+	ERROR = 15,
+	SUSCRIPCION = 16,
+	SIN_CONEXION = 17
 }t_header;
 
 typedef struct{
@@ -40,6 +42,11 @@ typedef struct{
 	size_t size;
 	void* content;
 }t_message; //pensando en memoria
+
+typedef struct {
+	t_header idColaSindicato;
+	pid_t idSuscriptor;
+} suscripcion;
 
 /*Funciones a implementar para manejo de mensajes
 crear_mensaje

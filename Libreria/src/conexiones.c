@@ -6,7 +6,7 @@
  */
 #include "conexiones.h"
 
-int conexion_servidor(char* host, int port, void*(*callback)()){
+int conexionServidor(char* host, int port, void*(*callback)()){
 
 	int socket;
 	struct sockaddr_in server_addr;
@@ -24,7 +24,36 @@ int conexion_servidor(char* host, int port, void*(*callback)()){
 		return socket;
 }
 
+int iniciarServidor(int puerto){
+	int  socket;
+	int val = 1;
+	struct sockaddr_in servaddr;
 
-int crear_socket(){
+	servaddr.sin_family = AF_INET;
+	servaddr.sin_addr.s_addr =INADDR_ANY;
+	servaddr.sin_port = htons(puerto);
+
+	socket = crearSocket();
+	if (socket < 0) {
+		char* error = strerror(errno);
+		perror(error);
+		free(error);
+		return EXIT_FAILURE;
+	}
+
+	setsockopt(socket, SOL_SOCKET, SO_REUSEADDR, &val, sizeof(val));
+
+	if (bind(socket,(struct sockaddr*) &servaddr, sizeof(servaddr)) < 0) {
+		return EXIT_FAILURE;
+	}
+	if (listen(socket, MAX_CLIENTS)< 0) {
+		return EXIT_FAILURE;
+	}
+
+	return socket;
+
+}
+
+int crearSocket(){
 	return socket(AF_INET, SOCK_STREAM, 0);
 }

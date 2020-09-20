@@ -16,6 +16,7 @@
 #include<readline/readline.h>
 
 #include "mensajes.h"
+#include "conexiones.h"
 
 typedef struct{
 

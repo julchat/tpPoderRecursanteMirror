@@ -20,7 +20,16 @@
 #include <string.h>
 #include <arpa/inet.h>
 
-int conexion_servidor(char* host, int port, void*(*callback)());
-int crear_socket();
+#define MAX_CLIENTS 128
+
+int puertoSindicato;
+char* ipRestaurante;
+int puertoRestaurante;
+
+
+
+int conexionServidor(char* host, int port, void*(*callback)());
+int iniciarServidor(int puerto);
+int crearSocket();
 
 #endif /* CONEXIONES_H_ */
