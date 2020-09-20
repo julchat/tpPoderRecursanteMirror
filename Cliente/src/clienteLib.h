@@ -13,12 +13,13 @@
 #include<commons/log.h>
 #include<commons/string.h>
 #include<commons/config.h>
+#include <commons/collections/list.h>
+
 #include "utils.h"
 #include "conexiones.h"
 #include "mensajes.h"
-#include <commons/collections/list.h>
-typedef struct {
 
+typedef struct {
 	char* IP_COMANDA;
 	int PUERTO_COMANDA;
 	char* IP_RESTAURANTE;
@@ -33,7 +34,7 @@ typedef struct {
 
 }cliente_config;
 
-cliente_config* clientStruct;
+//cliente_config* clientStruct;
 
 typedef enum{
 	APP = 0,
@@ -51,8 +52,6 @@ typedef struct{
 }parserMensaje;
 
 
-//void iniciar_logger_config();
-
 t_log* iniciar_logger(void);
 cliente_config* leer_config_cliente(char*);
 void leer_consola(t_log*);
@@ -62,7 +61,7 @@ bool sintaxisYSemanticaValida(char* mensaje);
 bool validarMatcheoOperacion(char* operacion, t_header* codigoPasadoPorReferencia);
 bool validarMatcheoDestinatario(char* destinatario, t_dest* moduloALlenar);
 void obtenerModulosCompatiblesYcantParametrosRequerida(t_header codigoOperacion,t_dest moduloDestino,
-		t_list** modulosCompatibles, int* cantParametros);
+t_list** modulosCompatibles, int* cantParametros);
 bool validarSemanticaMensaje(t_list* modulosCompatibles, int cantParametros, t_dest destinatario, t_list* parametros);
 void dividirMensajeEnPartes(char** operacion,char** destinatario,t_list** parametros, char*);
 

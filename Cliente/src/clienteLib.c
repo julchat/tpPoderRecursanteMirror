@@ -92,7 +92,7 @@ bool validarMatcheoOperacion(char* operacion, t_header* codigoALlenar){
 		*codigoALlenar = 14;
 		return 1;
 	}else{
-		printf("No existe el mensaje especificado");
+		printf("NO EXISTE EL MENSAJE ESPECIFICADO");
 		*codigoALlenar = 15;
 		return 0;
 	}
@@ -115,7 +115,7 @@ bool validarMatcheoDestinatario(char* destinatario, t_dest* moduloALlenar){
 		*moduloALlenar = CLIENTE;
 		return 1;
 	}else{
-		printf("no existe el modulo especificado");
+		printf("NO EXISTE EL MODULO ESPECIFICADO");
 		*moduloALlenar = ERR;
 		return 0;
 	}
@@ -204,17 +204,17 @@ void obtenerModulosCompatiblesYcantParametrosRequerida(t_header codigoOperacion,
 		list_add(*modulosCompatibles, &moduloSindicato);
 		break;
 	default:
-		printf("error en la validacion sintactica, no se deberia haber llegado aqui");
+		printf("ERROR EN VALIDACION SINTACTICA,NO SE DEBERIA HABER LLEGADO AQUI!");
 	}
 }
 
 bool validarSemanticaMensaje(t_list* modulosCompatibles, int cantParametros, t_dest destinatario, t_list* parametros){
 	if(!(cantParametros == parametros->elements_count)){
-		printf("se esperaba que el mensaje tuviera %d parametros, y tuvo %d parametros", cantParametros,parametros->elements_count);
+		printf("SE ESPERABA QUE EL MENSAJE TENGA %d PARAMETROS, Y TUVO %d PARAMETROS", cantParametros,parametros->elements_count);
 		return 0;
 	}
 	if(!(estaEnLaLista(destinatario, modulosCompatibles))){
-		printf("el mensaje especificado no se puede mandar a tal modulo");
+		printf("EL MENSAJE NO SE PUEDE MANDAR AL MODULO ESPECIFICADO");
 		return 0;
 	}
 		return 1;

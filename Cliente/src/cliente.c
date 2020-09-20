@@ -2,16 +2,16 @@
 #include <pthread.h>
 
 cliente_config* configCliente;
-t_log* logger_config;
+t_log* logger;
 
 int main(int argc, char *argv[]){
 
 	configCliente = leer_config_cliente(argv[1]);
-	//logger_config = log_create("Cliente.log", "Cliente", 1, LOG_LEVEL_INFO);
+	//logger = log_create("Cliente.log", "Cliente", 1, LOG_LEVEL_INFO);
 
 
 	pthread_t hiloConsola;
-	pthread_create(&hiloConsola,0,(void*)ejecutarConsola,NULL);
+	pthread_create(&hiloConsola, 0, (void*)ejecutarConsola, NULL);
 	pthread_join(hiloConsola,NULL);
 
 	/*conexion_servidor();
@@ -42,29 +42,3 @@ void ejecutarConsola(){
 	free(leido);
 }
 
-
-
-
-
-
-/*void wait_connection(int socket_client){
-
-	int cliente = accept_client(socket_client);
-	log_info(logger, "Se conecto un Cliente con el socket numero %d:", cliente);
-
-	pthread_t client_thread;
-	if(pthread_create(&client_thread, NULL, (void*)atender_cliente, (void*)cliente)!=0){
-		log_error(logger, "Error al crear el hilo del cliente");
-	}
-	pthread_detach(client_thread);
-	//close(cliente);
-}
-
-int accept_client(int servidor){
-	struct sockaddr_in client_addr;
-	uint32_t addr_size = sizeof(struct sockaddr_in);
-	uint32_t cliente;
-
-	cliente = accept(servidor,(void*) &client_addr, &addr_size);
-	return cliente;
-}*/

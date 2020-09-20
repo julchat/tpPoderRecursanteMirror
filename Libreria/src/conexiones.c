@@ -57,3 +57,6 @@ int iniciarServidor(int puerto){
 int crearSocket(){
 	return socket(AF_INET, SOCK_STREAM, 0);
 }
+
+
+
