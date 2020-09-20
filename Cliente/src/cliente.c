@@ -29,9 +29,10 @@ while(1){
 
 
 void ejecutarConsola(){
+	printf("ejecutando consola");
 	char* leido;
 	leido = readline(">");
-	while(strcmp(leido,"")){
+	while(strcmp(leido,"cerrar")){
 		if(sintaxisYSemanticaValida(leido)){
 			//realizarEnvioMensaje(leido);
 		}

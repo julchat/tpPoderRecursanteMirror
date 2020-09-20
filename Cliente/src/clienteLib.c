@@ -22,14 +22,15 @@ cliente_config* leer_config_cliente(char* path){
 }
 
 bool sintaxisYSemanticaValida(char* mensaje){
-	char* operacion = obtenerOperacion(mensaje);
-	char* destinatario = obtenerDestinatario(mensaje);
-	t_list* parametros = obtenerParametros(mensaje);
-	printf("%s",destinatario);
+	char* operacion;
+	char* destinatario;
+	t_list* parametros = list_create();
+	dividirMensajeEnPartes(&operacion,&destinatario,&parametros, mensaje);
 	t_header codigoOperacion;
 	t_dest moduloDestino;
 	t_list* modulosCompatibles = list_create();
 	int cantParametros;
+
 	if(validarMatcheoOperacion(operacion, &codigoOperacion)){
 		if(validarMatcheoDestinatario(destinatario, &moduloDestino)){
 			obtenerModulosCompatiblesYcantParametrosRequerida(codigoOperacion,moduloDestino,&modulosCompatibles,&cantParametros);
@@ -209,7 +210,7 @@ void obtenerModulosCompatiblesYcantParametrosRequerida(t_header codigoOperacion,
 
 bool validarSemanticaMensaje(t_list* modulosCompatibles, int cantParametros, t_dest destinatario, t_list* parametros){
 	if(!(cantParametros == parametros->elements_count)){
-		printf("se esperaba que el mensaje tuviera %d parametros, y tuvo %d parametros", parametros->elements_count, cantParametros);
+		printf("se esperaba que el mensaje tuviera %d parametros, y tuvo %d parametros", cantParametros,parametros->elements_count);
 		return 0;
 	}
 	if(!(estaEnLaLista(destinatario, modulosCompatibles))){
@@ -220,35 +221,30 @@ bool validarSemanticaMensaje(t_list* modulosCompatibles, int cantParametros, t_d
 
 }
 
-char* obtenerOperacion(char* textoLeido){
-	char* token;
-	token = strtok(textoLeido," ");
-	if(token == NULL){
-			token = "error";
-	}
-	return token;
-}
 
-char* obtenerDestinatario(char* textoLeido){
-	char* token;
-	token = strtok(textoLeido, " ");
-	token = strtok(NULL, " ");
-	if(token == NULL){
-		token = "error";
-	}
-	return token;
-}
 
-t_list* obtenerParametros(char* textoLeido){
-	t_list* parametros = list_create();
-	char* token;
-	token = strtok(textoLeido, " ");
-	token = strtok(NULL, " ");
-	token = strtok(NULL, " ");
-	token = strtok(token,",");
-	while(token!=NULL){
-		list_add(parametros,&token);
-		token = strtok(NULL,",");
+void dividirMensajeEnPartes(char** operacion,char** destinatario,t_list** parametros,char* mensaje){
+	char** mensajeSeparado = string_split(mensaje," ");
+	if(*mensajeSeparado != NULL){
+		*operacion = *mensajeSeparado;
 	}
-	return parametros;
+	else{
+		*operacion = "operacionNoEspecificada";
+	}
+	if(*(mensajeSeparado+1) != NULL){
+		*destinatario = *(mensajeSeparado+1);
+	}
+	else{
+		*destinatario = "moduloNoEspecificado";
+	}
+	if(*(mensajeSeparado+2)!=NULL){
+		char* parametrosSinMeterEnLista = *(mensajeSeparado+2);
+		char** parametrosEnArray = string_split(parametrosSinMeterEnLista,",");
+		int i = 0;
+		i=0;
+		while(i<5 && *(parametrosEnArray+i)!=NULL){
+			list_add(*parametros,parametrosEnArray+i);
+			i++;
+		}
+	}
 }

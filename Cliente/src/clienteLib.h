@@ -17,7 +17,6 @@
 #include "conexiones.h"
 #include "mensajes.h"
 #include <commons/collections/list.h>
-
 typedef struct {
 
 	char* IP_COMANDA;
@@ -65,8 +64,6 @@ bool validarMatcheoDestinatario(char* destinatario, t_dest* moduloALlenar);
 void obtenerModulosCompatiblesYcantParametrosRequerida(t_header codigoOperacion,t_dest moduloDestino,
 		t_list** modulosCompatibles, int* cantParametros);
 bool validarSemanticaMensaje(t_list* modulosCompatibles, int cantParametros, t_dest destinatario, t_list* parametros);
-char* obtenerOperacion(char*);
-char* obtenerDestinatario(char*);
-t_list* obtenerParametros(char*);
+void dividirMensajeEnPartes(char** operacion,char** destinatario,t_list** parametros, char*);
 
 #endif /* TP0_H_ */
