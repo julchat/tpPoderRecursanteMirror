@@ -20,6 +20,7 @@
 #include "mensajes.h"
 
 typedef struct {
+
 	char* IP_COMANDA;
 	int PUERTO_COMANDA;
 	char* IP_RESTAURANTE;
