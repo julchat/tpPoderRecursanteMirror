@@ -50,6 +50,29 @@ typedef struct{
 
 }obtener_receta;
 
+typedef struct
+{
+	uint8_t codOp;
+	uint8_t cantParam;
+	char* param1;
+	char* param2;
+	char* param3;
+	char* param4;
+}mensajeASerializar;
+
+typedef struct
+{
+	int size;
+	void* stream;
+} t_buffer;
+
+typedef struct
+{
+	uint8_t codOp;
+	t_buffer* buffer;
+} t_paquete;
+
+
 void* serializarConsultarPlatos();
 void* serializarGuardarPedido();
 void* serializarGuardarPlato();

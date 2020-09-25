@@ -10,5 +10,4 @@
 
 #include <commons/collections/list.h>
 
-bool estaEnLaLista(void*,t_list*);
 #endif /* AUXILIARESLISTAS_H_ */

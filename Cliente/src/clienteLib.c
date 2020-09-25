@@ -35,12 +35,13 @@ bool sintaxisYSemanticaValida(char* mensaje){
 		if(validarMatcheoDestinatario(destinatario, &moduloDestino)){
 			obtenerModulosCompatiblesYcantParametrosRequerida(codigoOperacion,moduloDestino,&modulosCompatibles,&cantParametros);
 			if(validarSemanticaMensaje(modulosCompatibles, cantParametros, moduloDestino, parametros)){
+				list_destroy_and_destroy_elements(modulosCompatibles,(void*) free);
 				return 1;
 			}
 		}
 
 	}
-	list_destroy(modulosCompatibles);
+	list_destroy_and_destroy_elements(modulosCompatibles,(void*) free);
 	return 0;
 }
 
@@ -213,7 +214,7 @@ bool validarSemanticaMensaje(t_list* modulosCompatibles, int cantParametros, t_d
 		printf("SE ESPERABA QUE EL MENSAJE TENGA %d PARAMETROS, Y TUVO %d PARAMETROS", cantParametros,parametros->elements_count);
 		return 0;
 	}
-	if(!(estaEnLaLista(destinatario, modulosCompatibles))){
+	if(!(estaEnLaLista(&destinatario, modulosCompatibles))){
 		printf("EL MENSAJE NO SE PUEDE MANDAR AL MODULO ESPECIFICADO");
 		return 0;
 	}
@@ -247,4 +248,13 @@ void dividirMensajeEnPartes(char** operacion,char** destinatario,t_list** parame
 			i++;
 		}
 	}
+}
+
+bool estaEnLaLista(t_dest* unElemento, t_list* unaLista){
+	for(int i = 0; i<unaLista->elements_count;i++){
+		if((list_get(unaLista,i)) == (unElemento)){
+			return 1;
+		}
+	}
+	return 0;
 }

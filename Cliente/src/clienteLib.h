@@ -65,5 +65,5 @@ void obtenerModulosCompatiblesYcantParametrosRequerida(t_header codigoOperacion,
 t_list** modulosCompatibles, int* cantParametros);
 bool validarSemanticaMensaje(t_list* modulosCompatibles, int cantParametros, t_dest destinatario, t_list* parametros);
 void dividirMensajeEnPartes(char** operacion,char** destinatario,t_list** parametros, char*);
-
+bool estaEnLaLista(t_dest* unElemento, t_list* unaLista);
 #endif /* TP0_H_ */
