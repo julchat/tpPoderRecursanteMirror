@@ -50,18 +50,18 @@ int main(void){
 
 void* colaServidor() { //modo servidor, a la escucha de una o varias conexiones
 	socketEscucha = iniciarServidor(puertoSindicato);
-	log_info(logger, "SERVIDOR LEVANTADO! ESCUCHANDO EN %i", puertoSindicato);
+	log_info(loggerSindicato, "SERVIDOR LEVANTADO! ESCUCHANDO EN %i", puertoSindicato);
 	struct sockaddr sindicatoCliente;
 		socklen_t len = sizeof(sindicatoCliente);
 		do {
 			int socketSindicato = accept(socketEscucha, &sindicatoCliente, &len);
 			if (socketSindicato > 0) {
-				log_info(logger, "NUEVA CONEXIÓN!");
+				log_info(loggerSindicato, "NUEVA CONEXIÓN!");
 				pthread_t sindicatoThread;
 				pthread_create(&sindicatoThread, NULL, (void*) manejarSuscripciones, (void*) (socketSindicato));
 				pthread_detach(sindicatoThread);
 			} else {
-				log_error(logger, "ERROR ACEPTANDO CONEXIONES: %s", strerror(errno));
+				log_error(loggerSindicato, "ERROR ACEPTANDO CONEXIONES: %s", strerror(errno));
 			}
 		} while (1);
 }
@@ -71,7 +71,7 @@ void* colaCliente(void* cola) {//se conecta al restaurante
 	while(1){
 		int socketSindicato = conexionServidor(ipRestaurante, puertoRestaurante, NULL);
 		if(socketSindicato != -errno){
-			log_info(logger, "CONEXION EXITOSA CON EL RESTAURANTE");
+			log_info(loggerSindicato, "CONEXION EXITOSA CON EL RESTAURANTE");
 			t_message mensaje;
 			suscripcion content;
 			content.idSuscriptor= getpid();
@@ -145,6 +145,6 @@ void* manejarSuscripciones() {
 }
 
 void terminarPrograma(){
-	log_destroy(logger);
+	log_destroy(loggerSindicato);
 
 }

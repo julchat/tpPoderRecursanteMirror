@@ -34,7 +34,7 @@ void ejecutarConsola(){
 	leido = readline(">");
 	while(strcmp(leido,"cerrar")){
 		if(sintaxisYSemanticaValida(leido)){
-			realizarEnvioMensaje(leido);
+			//realizarEnvioMensaje(leido);
 		}
 		free(leido);
 		leido = readline(">");
@@ -42,13 +42,13 @@ void ejecutarConsola(){
 	free(leido);
 }
 
-void realizarEnvioMensaje(char* leido){
-	t_header operacion;
-	t_dest destinatario;
+/*void realizarEnvioMensaje(char* leido){
+	char* operacion;
+	char* destinatario;
 	t_list* parametros = list_create();
 	dividirMensajeEnPartes(&operacion,&destinatario,&parametros, leido);
 
 	mensajeASerializar* estructuraASerializar = malloc(sizeof(mensajeASerializar));
 	estructuraASerializar->codOp
 
-}
+}*/

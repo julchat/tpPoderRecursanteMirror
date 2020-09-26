@@ -42,29 +42,29 @@ int main (int argc, char*argv[]) {
 }
 
 void* colaServidor() { //modo servidor, a la escucha de una o varias conexiones
-	socketEscucha = iniciarServidor(puertoSindicato);
-	log_info(logger, "SERVIDOR LEVANTADO! ESCUCHANDO EN %i", puertoSindicato);
-	struct sockaddr sindicatoCliente;
-		socklen_t len = sizeof(sindicatoCliente);
+	socketEscucha = iniciarServidor(puertoRestaurante);
+	log_info(loggerRestaurante, "SERVIDOR LEVANTADO! ESCUCHANDO EN %i", puertoRestaurante);
+	struct sockaddr restauranteCliente;
+		socklen_t len = sizeof(restauranteCliente);
 		do {
-			int socketSindicato = accept(socketEscucha, &sindicatoCliente, &len);
-			if (socketSindicato > 0) {
-				log_info(logger, "NUEVA CONEXIÓN!");
-				pthread_t sindicatoThread;
-				pthread_create(&sindicatoThread, NULL, (void*) manejarSuscripciones, (void*) (socketSindicato));
-				pthread_detach(sindicatoThread);
+			int socketRestaurante = accept(socketEscucha, &restauranteCliente, &len);
+			if (socketRestaurante > 0) {
+				log_info(loggerRestaurante, "NUEVA CONEXIÓN!");
+				pthread_t restauranteThread;
+				pthread_create(&restauranteThread, NULL, (void*) manejarSuscripciones, (void*) (socketRestaurante));
+				pthread_detach(restauranteThread);
 			} else {
-				log_error(logger, "ERROR ACEPTANDO CONEXIONES: %s", strerror(errno));
+				log_error(loggerRestaurante, "ERROR ACEPTANDO CONEXIONES: %s", strerror(errno));
 			}
 		} while (1);
 }
 
-void* colaCliente(void* cola) {//se conecta al restaurante
+void* colaCliente(void* cola) {//se conecta al modulo App
 	uint32_t colaSuscriptor = (uint32_t) cola;
 	while(1){
-		int socketSindicato = conexionServidor(ipRestaurante, puertoRestaurante, NULL);
-		if(socketSindicato != -errno){
-			log_info(logger, "CONEXION EXITOSA CON EL RESTAURANTE");
+		int socketRestaurante = conexionServidor(ipRestaurante, puertoRestaurante, NULL);
+		if(socketRestaurante != -errno){
+			log_info(loggerRestaurante, "CONEXION EXITOSA CON EL RESTAURANTE");
 			t_message mensaje;
 			suscripcion content;
 			content.idSuscriptor= getpid();
@@ -78,9 +78,9 @@ void* colaCliente(void* cola) {//se conecta al restaurante
 
 			mensaje.head = SUSCRIPCION;
 			mensaje.size = sizeof(suscripcion);
-			enviarMensaje(socketSindicato, mensaje.head,mensaje.content, mensaje.size);
+			enviarMensaje(socketRestaurante, mensaje.head,mensaje.content, mensaje.size);
 			free(mensaje.content);
-			manejarSuscripciones((void*) socketSindicato);
+			manejarSuscripciones((void*) socketRestaurante);
 		}
 		sleep(10);
 	}

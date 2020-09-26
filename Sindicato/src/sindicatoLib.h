@@ -64,7 +64,7 @@ typedef struct{
 
 
 sindicato_config* sindicatoStruct;
-t_log* logger;
+t_log* loggerSindicato;
 
 void iniciar_logger_config();
 

@@ -10,6 +10,6 @@
 
 #include "restauranteLib.h"
 
-
+int socketEscucha;
 
 #endif /* RESTAURANTE_H_ */
