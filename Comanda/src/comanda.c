@@ -9,13 +9,11 @@ t_log* logger_comanda;
 
 int main(int argc, char *argv[]){
 
-	printf("hola");
+
 	comanda_configuracion = leer_config_comanda(argv[1]);
-	printf("holaaaaaa");
+
 	//logger_comanda = crear_logger_comanda(comanda_configuracion->ARCHIVO_LOG);
-	if(comanda_configuracion->FRECUENCIA_COMPACTACION == 1){
-		printf("Seeeeee");
-	}
+
 
 	return 0;
 }
