@@ -53,7 +53,7 @@ typedef struct{
 }parserMensaje;
 
 
-t_log* iniciar_logger(void);
+t_log* crear_logger_cliente(char*);
 cliente_config* leer_config_cliente(char*);
 void leer_consola(t_log*);
 void paquete(int);

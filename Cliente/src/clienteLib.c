@@ -21,6 +21,11 @@ cliente_config* leer_config_cliente(char* path){
 
 }
 
+t_log* crear_logger_cliente(char* path){
+	t_log* log_aux = log_create(path,"cliente",1,LOG_LEVEL_INFO);
+	return log_aux;
+}
+
 bool sintaxisYSemanticaValida(char* mensaje){
 	char* operacion;
 	char* destinatario;

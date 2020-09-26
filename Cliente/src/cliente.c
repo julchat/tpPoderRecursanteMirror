@@ -2,12 +2,12 @@
 #include <pthread.h>
 
 cliente_config* configCliente;
-t_log* logger;
+t_log* loggerCliente;
 
 int main(int argc, char *argv[]){
 
 	configCliente = leer_config_cliente(argv[1]);
-	//logger = log_create("Cliente.log", "Cliente", 1, LOG_LEVEL_INFO);
+	loggerCliente = crear_logger_cliente(configCliente->ARCHIVO_LOG);
 
 
 	pthread_t hiloConsola;
