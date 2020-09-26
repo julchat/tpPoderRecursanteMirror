@@ -30,18 +30,17 @@ bool sintaxisYSemanticaValida(char* mensaje){
 	t_dest moduloDestino;
 	t_list* modulosCompatibles = list_create();
 	int cantParametros;
-
 	if(validarMatcheoOperacion(operacion, &codigoOperacion)){
 		if(validarMatcheoDestinatario(destinatario, &moduloDestino)){
 			obtenerModulosCompatiblesYcantParametrosRequerida(codigoOperacion,moduloDestino,&modulosCompatibles,&cantParametros);
 			if(validarSemanticaMensaje(modulosCompatibles, cantParametros, moduloDestino, parametros)){
-				list_destroy_and_destroy_elements(modulosCompatibles,(void*) free);
+				list_destroy(modulosCompatibles);
 				return 1;
 			}
 		}
 
 	}
-	list_destroy_and_destroy_elements(modulosCompatibles,(void*) free);
+	list_destroy(modulosCompatibles);
 	return 0;
 }
 
@@ -214,7 +213,12 @@ bool validarSemanticaMensaje(t_list* modulosCompatibles, int cantParametros, t_d
 		printf("SE ESPERABA QUE EL MENSAJE TENGA %d PARAMETROS, Y TUVO %d PARAMETROS", cantParametros,parametros->elements_count);
 		return 0;
 	}
-	if(!(estaEnLaLista(&destinatario, modulosCompatibles))){
+
+	bool estaElDestEnLosCompatibles(t_dest* unModuloDeLaLista){
+		return *unModuloDeLaLista == destinatario;
+	}
+
+	if(!(list_any_satisfy(modulosCompatibles, (bool*) estaElDestEnLosCompatibles))){
 		printf("EL MENSAJE NO SE PUEDE MANDAR AL MODULO ESPECIFICADO");
 		return 0;
 	}
@@ -244,17 +248,17 @@ void dividirMensajeEnPartes(char** operacion,char** destinatario,t_list** parame
 		int i = 0;
 		i=0;
 		while(i<5 && *(parametrosEnArray+i)!=NULL){
-			list_add(*parametros,parametrosEnArray+i);
+			list_add(*parametros,*(parametrosEnArray+i));
 			i++;
 		}
 	}
 }
 
-bool estaEnLaLista(t_dest* unElemento, t_list* unaLista){
+/*bool estaEnLaLista(t_dest* unElemento, t_list* unaLista){
 	for(int i = 0; i<unaLista->elements_count;i++){
 		if((list_get(unaLista,i)) == (unElemento)){
 			return 1;
 		}
 	}
 	return 0;
-}
+}*/
