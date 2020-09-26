@@ -27,7 +27,6 @@ char* ipRestaurante;
 int puertoRestaurante;
 
 
-
 int conexionServidor(char* host, int port, void*(*callback)());
 int iniciarServidor(int puerto);
 int crearSocket();

@@ -14,7 +14,7 @@ int conexionServidor(char* host, int port, void*(*callback)()){
 	server_addr.sin_addr.s_addr = inet_addr(host);
 	server_addr.sin_port = htons(port);
 
-	socket = crear_socket();
+	socket = crearSocket();
 	if(connect(socket,(struct sockaddr *)&server_addr, sizeof(server_addr))< 0){
 			perror("ERROR AL CONECTAR SERVIDOR");
 			return -errno;
