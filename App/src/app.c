@@ -7,6 +7,7 @@
 
 #include "app.h"
 
-int main(argc, *argv[]) {
+int main (int argc, char*argv[]) {
 
+	return 0;
 }

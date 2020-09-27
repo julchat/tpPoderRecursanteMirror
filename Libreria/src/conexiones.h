@@ -19,16 +19,34 @@
 #include <sys/socket.h>
 #include <string.h>
 #include <arpa/inet.h>
+#include <commons/log.h>
 
 #define MAX_CLIENTS 128
 
+char* ipSindicato;
 int puertoSindicato;
+
 char* ipRestaurante;
 int puertoRestaurante;
 
+char* ipApp;
+int puertoApp;
+
+char* ipCliente;
+int puertoCliente;
+
+char* ipComanda;
+int puertoComanda;
+
+int socketEscucha;
+//int socket;
+t_log* logger;
 
 int conexionServidor(char* host, int port, void*(*callback)());
 int iniciarServidor(int puerto);
 int crearSocket();
+void* colaServidor(int puerto);
+void* colaCliente(void* cola, char* ip, int puerto);
+void* manejarSuscripciones();
 
 #endif /* CONEXIONES_H_ */

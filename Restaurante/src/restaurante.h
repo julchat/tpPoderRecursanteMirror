@@ -10,6 +10,8 @@
 
 #include "restauranteLib.h"
 
-int socketEscucha;
+
+void* conexionAlModulo();
+void* modoServidor();
 
 #endif /* RESTAURANTE_H_ */

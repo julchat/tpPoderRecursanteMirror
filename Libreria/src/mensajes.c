@@ -7,6 +7,30 @@
  *      Author: utnso
  */
 
+t_message* crearMensaje(t_header head, size_t size, void* content){
+	t_message* message = (t_message*)malloc(sizeof(t_message));
+	message->head = head;
+	message->content = malloc(size);
+	message->size = size + sizeof(head);
+
+	memset(message->content, 0, size);
+	memcpy(message->content,content,size);
+
+	return message;
+}
+
+t_message* error(int res){
+	t_header header = res == 0? SIN_CONEXION : ERROR;
+	int32_t err = -errno;
+	return crearMensaje(header,sizeof(err),&err);
+}
+/*int send_status(int sock,t_header head, int status){
+	return send_message(sock,status,&status,sizeof(int32_t));
+}
+int get_status(t_message* message){
+	return *((int*)message->content);
+}*/
+
 int enviarMensaje(int socket, t_header head,const void* content, size_t size){
 	t_message* message = crearMensaje(head,size,content);
 	int res = send(socket, &(message->size) , sizeof(size_t), 0);
@@ -29,15 +53,6 @@ int enviarMensaje(int socket, t_header head,const void* content, size_t size){
 
 	return res;
 
-}
-
-void liberarMensaje(t_message* message){
-	if(message != NULL){
-		if(message->content != NULL){
-			free(message->content);
-		}
-		free(message);
-	}
 }
 
 t_message* recibirMensaje(int socket){
@@ -70,27 +85,13 @@ t_message* recibirMensaje(int socket){
 	return message;
 }
 
-t_message* crearMensaje(t_header head, size_t size,const void* content){
-	t_message* message = (t_message*)malloc(sizeof(t_message));
-	message->head = head;
-	message->content = malloc(size);
-	message->size = size + sizeof(head);
-
-	memset(message->content, 0, size);
-	memcpy(message->content,content,size);
-
-	return message;
+void liberarMensaje(t_message* message){
+	if(message != NULL){
+		if(message->content != NULL){
+			free(message->content);
+		}
+		free(message);
+	}
 }
 
-t_message* error(int res){
-	t_header header = res == 0? SIN_CONEXION : ERROR;
-	int32_t err = -errno;
-	return crearMensaje(header,sizeof(err),&err);
-}
-/*int send_status(int sock,t_header head, int status){
-	return send_message(sock,status,&status,sizeof(int32_t));
-}
-int get_status(t_message* message){
-	return *((int*)message->content);
-}*/
 

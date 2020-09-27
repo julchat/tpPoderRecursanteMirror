@@ -34,7 +34,7 @@ restauranteConfig* restauranteConf;
 t_log* loggerRestaurante;
 char* LOG_FILE;
 
-
+void iniciarLogger();
 void cargarConfiguraciones(char* pathConfig);
 t_config* leerConfig(char* pathConfig);
 

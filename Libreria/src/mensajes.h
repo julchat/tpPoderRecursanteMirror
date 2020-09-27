@@ -41,17 +41,18 @@ typedef struct{
 	t_header head;
 	size_t size;
 	void* content;
-}t_message; //pensando en memoria
+}t_message;
 
 typedef struct {
 	t_header idColaSindicato;
 	pid_t idSuscriptor;
 } suscripcion;
 
-/*Funciones a implementar para manejo de mensajes
-crear_mensaje
-enviar_mensaje
-recibir_mensaje
-liberar_mensaje
-  */
+t_message* crearMensaje(t_header head, size_t size, void* content);
+t_message* error(int res);
+int enviarMensaje(int socket, t_header head,const void* content, size_t size);
+t_message* recibirMensaje(int socket);
+void liberarMensaje(t_message* message);
+
+
 #endif /* MENSAJES_H_ */

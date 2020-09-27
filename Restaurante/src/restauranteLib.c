@@ -7,6 +7,10 @@
 
 #include "restauranteLib.h"
 
+void iniciarLogger(){
+	loggerRestaurante = log_create(LOG_FILE, "Restaurante", 1, LOG_LEVEL_INFO);
+}
+
 void cargarConfiguraciones(char* pathConfig) {
 	restauranteConf = leerConfig(pathConfig);
 	restauranteConf = malloc(sizeof(restauranteConfig));
@@ -30,10 +34,6 @@ t_config* leerConfig(char* pathConfig) {
 			exit(1);
 		}
 		return config;
-}
-
-void iniciarLogger(){
-	loggerRestaurante = log_create(LOG_FILE, "Restaurante", 1, LOG_LEVEL_INFO);
 }
 
 
