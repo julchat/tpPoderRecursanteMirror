@@ -20,6 +20,7 @@
 #include <string.h>
 #include <arpa/inet.h>
 #include <commons/log.h>
+#include "mensajes.h"
 
 #define MAX_CLIENTS 128
 

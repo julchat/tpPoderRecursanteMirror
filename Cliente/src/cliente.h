@@ -32,6 +32,7 @@ int create_socket();
 void wait_connection(int socket_client);
 int accept_client(int servidor);
 void ejecutarConsola();
+void procesarEntrada(char* mensajeLeido);
 
 
 #endif /* CLIENTE_H_ */

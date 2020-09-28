@@ -32,7 +32,6 @@ typedef struct {
 	char* ARCHIVO_LOG;
 	int POSICION_X;
 	int POSICION_Y;
-
 }cliente_config;
 
 //cliente_config* clientStruct;
@@ -57,13 +56,13 @@ t_log* crear_logger_cliente(char*);
 cliente_config* leer_config_cliente(char*);
 void leer_consola(t_log*);
 void paquete(int);
+t_list* dividirMensajeEnPartes(char** operacion,char** destinatario,char* mensaje);
 void terminar_programa(int, t_log*, t_config*);
-bool sintaxisYSemanticaValida(char* mensaje);
+bool sintaxisYSemanticaValida(char* mensaje, t_header* codigoOperacion, t_dest* moduloDestino, t_list** parametros);
 bool validarMatcheoOperacion(char* operacion, t_header* codigoPasadoPorReferencia);
 bool validarMatcheoDestinatario(char* destinatario, t_dest* moduloALlenar);
 void obtenerModulosCompatiblesYcantParametrosRequerida(t_header codigoOperacion,t_dest moduloDestino,
 t_list** modulosCompatibles, int* cantParametros);
 bool validarSemanticaMensaje(t_list* modulosCompatibles, int cantParametros, t_dest destinatario, t_list* parametros);
-void dividirMensajeEnPartes(char** operacion,char** destinatario,t_list** parametros, char*);
 bool estaEnLaLista(t_dest* unElemento, t_list* unaLista);
 #endif /* TP0_H_ */

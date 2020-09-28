@@ -26,26 +26,23 @@ t_log* crear_logger_cliente(char* path){
 	return log_aux;
 }
 
-bool sintaxisYSemanticaValida(char* mensaje){
+bool sintaxisYSemanticaValida(char* mensaje, t_header* codigoOperacion, t_dest* moduloDestino, t_list** parametros){
 	char* operacion;
 	char* destinatario;
-	t_list* parametros = list_create();
-	dividirMensajeEnPartes(&operacion,&destinatario,&parametros, mensaje);
-	t_header codigoOperacion;
-	t_dest moduloDestino;
+	*parametros = dividirMensajeEnPartes(&operacion,&destinatario,mensaje);
 	t_list* modulosCompatibles = list_create();
 	int cantParametros;
-	if(validarMatcheoOperacion(operacion, &codigoOperacion)){
-		if(validarMatcheoDestinatario(destinatario, &moduloDestino)){
-			obtenerModulosCompatiblesYcantParametrosRequerida(codigoOperacion,moduloDestino,&modulosCompatibles,&cantParametros);
-			if(validarSemanticaMensaje(modulosCompatibles, cantParametros, moduloDestino, parametros)){
-				list_destroy(modulosCompatibles);
+	if(validarMatcheoOperacion(operacion, codigoOperacion)){
+		if(validarMatcheoDestinatario(destinatario, moduloDestino)){
+			obtenerModulosCompatiblesYcantParametrosRequerida(*codigoOperacion,*moduloDestino,&modulosCompatibles,&cantParametros);
+			if(validarSemanticaMensaje(modulosCompatibles, cantParametros, *moduloDestino, *parametros)){
+				list_destroy_and_destroy_elements(modulosCompatibles, free);
 				return 1;
 			}
 		}
 
 	}
-	list_destroy(modulosCompatibles);
+	list_destroy_and_destroy_elements(modulosCompatibles, free);
 	return 0;
 }
 
@@ -128,85 +125,136 @@ bool validarMatcheoDestinatario(char* destinatario, t_dest* moduloALlenar){
 
 void obtenerModulosCompatiblesYcantParametrosRequerida(t_header codigoOperacion,t_dest moduloDestino,
 		t_list** modulosCompatibles, int* cantParametros){
-	t_dest moduloApp = APP;
-	t_dest moduloRestaurante = RESTAURANTE;
-	t_dest moduloSindicato = SINDICATO;
-	t_dest moduloComanda = COMANDA;
-	t_dest moduloCliente = CLIENTE;
+	t_dest* moduloApp = malloc(sizeof(t_dest));
+	t_dest* moduloRestaurante = malloc(sizeof(t_dest));
+	t_dest* moduloSindicato = malloc(sizeof(t_dest));
+	t_dest* moduloComanda = malloc(sizeof(t_dest));
+	t_dest* moduloCliente = malloc(sizeof(t_dest));
+	*moduloApp = APP;
+	*moduloRestaurante = RESTAURANTE;
+	*moduloSindicato = SINDICATO;
+	*moduloComanda = COMANDA;
+	*moduloCliente = CLIENTE;
 	switch(codigoOperacion){
 	case CONSULTAR_RESTAURANTES:
 		*cantParametros = 0;
-		list_add(*modulosCompatibles,&moduloApp);
+		list_add(*modulosCompatibles,moduloApp);
+		free(moduloRestaurante);
+		free(moduloSindicato);
+		free(moduloComanda);
+		free(moduloCliente);
 		break;
 	case SELECCIONAR_RESTAURANTES:
 		*cantParametros = 2;
-		list_add(*modulosCompatibles,&moduloApp);
+		list_add(*modulosCompatibles,moduloApp);
+		free(moduloRestaurante);
+		free(moduloSindicato);
+		free(moduloComanda);
+		free(moduloCliente);
 		break;
 	case OBTENER_RESTAURANTE:
 		*cantParametros = 1;
-		list_add(*modulosCompatibles,&moduloSindicato);
+		list_add(*modulosCompatibles,moduloSindicato);
+		free(moduloRestaurante);
+		free(moduloApp);
+		free(moduloComanda);
+		free(moduloCliente);
 		break;
 	case CONSULTAR_PLATOS:
 		*cantParametros = 1;
-		list_add(*modulosCompatibles, &moduloApp);
-		list_add(*modulosCompatibles, &moduloRestaurante);
-		list_add(*modulosCompatibles, &moduloSindicato);
+		list_add(*modulosCompatibles, moduloApp);
+		list_add(*modulosCompatibles, moduloRestaurante);
+		list_add(*modulosCompatibles, moduloSindicato);
+		free(moduloComanda);
+		free(moduloCliente);
 		break;
 	case CREAR_PEDIDO:
 		*cantParametros = 0;
-		list_add(*modulosCompatibles, &moduloApp);
-		list_add(*modulosCompatibles, &moduloRestaurante);
+		list_add(*modulosCompatibles, moduloApp);
+		list_add(*modulosCompatibles, moduloRestaurante);
+		free(moduloSindicato);
+		free(moduloComanda);
+		free(moduloCliente);
 		break;
 	case GUARDAR_PEDIDO:
 		*cantParametros = 2;
-		list_add(*modulosCompatibles, &moduloSindicato);
-		list_add(*modulosCompatibles, &moduloComanda);
+		list_add(*modulosCompatibles, moduloSindicato);
+		list_add(*modulosCompatibles, moduloComanda);
+		free(moduloRestaurante);
+		free(moduloApp);
+		free(moduloCliente);
 		break;
 	case ANIADIR_PLATO:
 		*cantParametros = 2;
-		list_add(*modulosCompatibles, &moduloApp);
-		list_add(*modulosCompatibles, &moduloRestaurante);
+		list_add(*modulosCompatibles, moduloApp);
+		list_add(*modulosCompatibles, moduloRestaurante);
+		free(moduloSindicato);
+		free(moduloComanda);
+		free(moduloCliente);
 		break;
 	case GUARDAR_PLATO:
 		*cantParametros = 4;
-		list_add(*modulosCompatibles, &moduloSindicato);
-		list_add(*modulosCompatibles, &moduloComanda);
+		list_add(*modulosCompatibles, moduloSindicato);
+		list_add(*modulosCompatibles, moduloComanda);
+		free(moduloCliente);
+		free(moduloApp);
+		free(moduloRestaurante);
 		break;
 	case CONFIRMAR_PEDIDO:
 		*cantParametros = 1;
-		list_add(*modulosCompatibles, &moduloApp);
-		list_add(*modulosCompatibles, &moduloRestaurante);
-		list_add(*modulosCompatibles, &moduloSindicato);
-		list_add(*modulosCompatibles, &moduloComanda);
+		list_add(*modulosCompatibles, moduloApp);
+		list_add(*modulosCompatibles, moduloRestaurante);
+		list_add(*modulosCompatibles, moduloSindicato);
+		list_add(*modulosCompatibles, moduloComanda);
+		free(moduloCliente);
 		break;
 	case PLATO_LISTO:
 		*cantParametros = 3;
-		list_add(*modulosCompatibles, &moduloApp);
-		list_add(*modulosCompatibles, &moduloSindicato);
-		list_add(*modulosCompatibles, &moduloComanda);
+		list_add(*modulosCompatibles, moduloApp);
+		list_add(*modulosCompatibles, moduloSindicato);
+		list_add(*modulosCompatibles, moduloComanda);
+		free(moduloRestaurante);
+		free(moduloCliente);
 		break;
 	case CONSULTAR_PEDIDO:
 		*cantParametros = 1;
-		list_add(*modulosCompatibles, &moduloApp);
-		list_add(*modulosCompatibles, &moduloRestaurante);
+		list_add(*modulosCompatibles, moduloApp);
+		list_add(*modulosCompatibles, moduloRestaurante);
+		free(moduloSindicato);
+		free(moduloComanda);
+		free(moduloCliente);
 		break;
 	case OBTENER_PEDIDO:
 		*cantParametros = 2;
-		list_add(*modulosCompatibles, &moduloSindicato);
-		list_add(*modulosCompatibles, &moduloComanda);
+		list_add(*modulosCompatibles, moduloSindicato);
+		list_add(*modulosCompatibles, moduloComanda);
+		free(moduloRestaurante);
+		free(moduloApp);
+		free(moduloCliente);
 		break;
 	case FINALIZAR_PEDIDO:
 		*cantParametros = 2;
-		list_add(*modulosCompatibles, &moduloComanda);
-		list_add(*modulosCompatibles, &moduloCliente);
+		list_add(*modulosCompatibles, moduloComanda);
+		list_add(*modulosCompatibles, moduloCliente);
+		free(moduloRestaurante);
+		free(moduloSindicato);
+		free(moduloApp);
 		break;
 	case TERMINAR_PEDIDO:
 		*cantParametros = 2;
-		list_add(*modulosCompatibles, &moduloSindicato);
+		list_add(*modulosCompatibles, moduloSindicato);
+		free(moduloRestaurante);
+		free(moduloApp);
+		free(moduloComanda);
+		free(moduloCliente);
 		break;
 	case OBTENER_RECETA:
 		*cantParametros = 1;
-		list_add(*modulosCompatibles, &moduloSindicato);
+		list_add(*modulosCompatibles, moduloSindicato);
+		free(moduloRestaurante);
+		free(moduloApp);
+		free(moduloComanda);
+		free(moduloCliente);
 		break;
 	default:
 		printf("ERROR EN VALIDACION SINTACTICA,NO SE DEBERIA HABER LLEGADO AQUI!");
@@ -222,7 +270,6 @@ bool validarSemanticaMensaje(t_list* modulosCompatibles, int cantParametros, t_d
 	bool estaElDestEnLosCompatibles(t_dest* unModuloDeLaLista){
 		return *unModuloDeLaLista == destinatario;
 	}
-
 	if(!(list_any_satisfy(modulosCompatibles, (bool*) estaElDestEnLosCompatibles))){
 		printf("EL MENSAJE NO SE PUEDE MANDAR AL MODULO ESPECIFICADO");
 		return 0;
@@ -233,8 +280,9 @@ bool validarSemanticaMensaje(t_list* modulosCompatibles, int cantParametros, t_d
 
 
 
-void dividirMensajeEnPartes(char** operacion,char** destinatario,t_list** parametros,char* mensaje){
+t_list* dividirMensajeEnPartes(char** operacion,char** destinatario,char* mensaje){
 	char** mensajeSeparado = string_split(mensaje," ");
+	t_list* parametros = list_create();
 	if(*mensajeSeparado != NULL){
 		*operacion = *mensajeSeparado;
 	}
@@ -253,10 +301,11 @@ void dividirMensajeEnPartes(char** operacion,char** destinatario,t_list** parame
 		int i = 0;
 		i=0;
 		while(i<5 && *(parametrosEnArray+i)!=NULL){
-			list_add(*parametros,*(parametrosEnArray+i));
+			list_add(parametros,*(parametrosEnArray+i));
 			i++;
 		}
 	}
+	return parametros;
 }
 
 /*bool estaEnLaLista(t_dest* unElemento, t_list* unaLista){

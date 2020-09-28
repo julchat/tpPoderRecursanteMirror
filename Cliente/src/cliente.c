@@ -6,8 +6,8 @@ t_log* loggerCliente;
 
 int main(int argc, char *argv[]){
 
-	configCliente = leer_config_cliente(argv[1]);
-	loggerCliente = crear_logger_cliente(configCliente->ARCHIVO_LOG);
+	//configCliente = leer_config_cliente(argv[1]);
+	//loggerCliente = crear_logger_cliente(configCliente->ARCHIVO_LOG);
 
 
 	pthread_t hiloConsola;
@@ -28,20 +28,46 @@ while(1){
 }
 
 
-void ejecutarConsola(){
+/*void ejecutarConsola(){
 	printf("ejecutando consola");
 	char* leido;
+	t_dest moduloDestino;
+	t_header codOp;
+	t_list* parametros;
 	leido = readline(">");
 	while(strcmp(leido,"cerrar")){
-		if(sintaxisYSemanticaValida(leido)){
+		if(sintaxisYSemanticaValida(leido,&codOp,&moduloDestino,&parametros)){
 			//realizarEnvioMensaje(leido);
 		}
 		free(leido);
 		leido = readline(">");
 	}
 	free(leido);
+}*/
+
+void ejecutarConsola(){
+	printf("ejecutando consola");
+	char* leido;
+	leido = readline(">");
+	while(strcmp(leido,"cerrar")){
+		procesarEntrada(leido);
+		free(leido);
+		leido = readline(">");
+	}
+	free(leido);
 }
 
+void procesarEntrada(char* mensajeLeido){
+	t_header* codOp = malloc(sizeof(t_header));
+	t_dest* destinatario = malloc(sizeof(t_dest));
+	t_list* parametros = list_create();
+	if(sintaxisYSemanticaValida(mensajeLeido,codOp,destinatario,&parametros)){
+		//mandarMensaje();
+	}
+	free(codOp);
+	free(destinatario);
+	list_destroy_and_destroy_elements(parametros,free);
+}
 /*void realizarEnvioMensaje(char* leido){
 	char* operacion;
 	char* destinatario;

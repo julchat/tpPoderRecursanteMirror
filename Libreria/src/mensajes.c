@@ -7,7 +7,7 @@
  *      Author: utnso
  */
 
-t_message* crearMensaje(t_header head, size_t size, void* content){
+t_message* crearMensaje(t_header head, size_t size, const void* content){
 	t_message* message = (t_message*)malloc(sizeof(t_message));
 	message->head = head;
 	message->content = malloc(size);

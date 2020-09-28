@@ -48,24 +48,19 @@ typedef struct {
 	pid_t idSuscriptor;
 } suscripcion;
 
-<<<<<<< HEAD
-t_message* crearMensaje(t_header head, size_t size, void* content);
-t_message* error(int res);
-int enviarMensaje(int socket, t_header head,const void* content, size_t size);
-t_message* recibirMensaje(int socket);
-void liberarMensaje(t_message* message);
+//<<<<<<< HEAD
 
-
-=======
+//=======
 /*Funciones a implementar para manejo de mensajes
 crear_mensaje
 enviar_mensaje
 recibir_mensaje
 liberar_mensaje
   */
+t_message* recibirMensaje(int socket);;
 t_message* crearMensaje(t_header head, size_t size,const void* content);
 t_message* error(int res);
 void liberarMensaje(t_message* message);
 int enviarMensaje(int socket, t_header head,const void* content, size_t size);
->>>>>>> 42a75a133c6244892ee4655a8bd21b6abcab1025
+//>>>>>>> 42a75a133c6244892ee4655a8bd21b6abcab1025
 #endif /* MENSAJES_H_ */
