@@ -33,6 +33,7 @@ void wait_connection(int socket_client);
 int accept_client(int servidor);
 void ejecutarConsola();
 void procesarEntrada(char* mensajeLeido);
+void declararHiloYMeterloALaLista(t_list* hilosEnConsola, char* leido);
 
 
 #endif /* CLIENTE_H_ */

@@ -47,14 +47,21 @@ while(1){
 
 void ejecutarConsola(){
 	printf("ejecutando consola");
+	t_list* hilosEnConsola = list_create();
 	char* leido;
+	pthread_t* unHilo;
 	leido = readline(">");
 	while(strcmp(leido,"cerrar")){
-		procesarEntrada(leido);
+		declararHiloYMeterloALaLista(hilosEnConsola, leido);
 		free(leido);
 		leido = readline(">");
 	}
 	free(leido);
+	for(int j= 0; j<hilosEnConsola->elements_count;j++){
+		unHilo = list_get(hilosEnConsola,j);
+		pthread_join(*unHilo,NULL);
+	}
+	list_destroy(hilosEnConsola);
 }
 
 void procesarEntrada(char* mensajeLeido){
@@ -68,6 +75,16 @@ void procesarEntrada(char* mensajeLeido){
 	free(destinatario);
 	list_destroy_and_destroy_elements(parametros,free);
 }
+
+void declararHiloYMeterloALaLista(t_list* hilosEnConsola, char* leido){
+	pthread_t* hiloParaUnMensaje;
+	char*  leidoCopiado = malloc(strlen(leido)+1);
+	strcpy(leidoCopiado,leido);
+
+	pthread_create(hiloParaUnMensaje,0,(void*)procesarEntrada,leidoCopiado);
+	list_add(hilosEnConsola,hiloParaUnMensaje);
+}
+
 /*void realizarEnvioMensaje(char* leido){
 	char* operacion;
 	char* destinatario;
