@@ -54,6 +54,7 @@ void ejecutarConsola(){
 	while(strcmp(leido,"cerrar")){
 		declararHiloYMeterloALaLista(hilosEnConsola, leido);
 		free(leido);
+		wait(10);
 		leido = readline(">");
 	}
 	free(leido);
@@ -64,25 +65,53 @@ void ejecutarConsola(){
 	list_destroy(hilosEnConsola);
 }
 
-void procesarEntrada(char* mensajeLeido){
-	t_header* codOp = malloc(sizeof(t_header));
-	t_dest* destinatario = malloc(sizeof(t_dest));
-	t_list* parametros = list_create();
-	if(sintaxisYSemanticaValida(mensajeLeido,codOp,destinatario,&parametros)){
-		//mandarMensaje();
+void procesarEntrada(mensajeListoYSeparado* paraMandar){
+	int socketDeHabla;
+	int socketDeEscucha;
+	switch(*(paraMandar->destinatario)){
+		case(APP):
+		socketDeHabla = crear_conexion(configCliente->IP_APP,configCliente->PUERTO_APP);
+		socketDeEscucha = crear_conexion(configCliente->IP_APP,configCliente->PUERTO_APP);
+		break;
+		case(RESTAURANTE):
+		socketDeHabla = crear_conexion(configCliente->IP_RESTAURANTE,configCliente->PUERTO_RESTAURANTE);
+		socketDeEscucha = crear_conexion(configCliente->IP_RESTAURANTE,configCliente->PUERTO_RESTAURANTE);
+		break;
+		case(COMANDA):
+		socketDeHabla = crear_conexion(configCliente->IP_COMANDA,configCliente->PUERTO_COMANDA);
+		socketDeEscucha = crear_conexion(configCliente->IP_COMANDA,configCliente->PUERTO_COMANDA);
+		break;
+		case(SINDICATO):
+		socketDeHabla = crear_conexion(configCliente->IP_SINDICATO,configCliente->PUERTO_SINDICATO);
+		socketDeEscucha = crear_conexion(configCliente->IP_SINDICATO,configCliente->PUERTO_SINDICATO);
+		break;
+		case(CLIENTE):
+		socketDeHabla = crear_conexion(configCliente->IP_APP,configCliente->PUERTO_APP);
+		socketDeEscucha = crear_conexion(configCliente->IP_APP,configCliente->PUERTO_APP);
+		break;
+		case(ERR):
+		//log?
+		break;
 	}
-	free(codOp);
-	free(destinatario);
-	list_destroy_and_destroy_elements(parametros,free);
+
+	free(paraMandar->operacion);
+	free(paraMandar->destinatario);
+	list_destroy_and_destroy_elements(paraMandar->parametros,free);
+	free(paraMandar);
 }
 
 void declararHiloYMeterloALaLista(t_list* hilosEnConsola, char* leido){
-	pthread_t* hiloParaUnMensaje;
-	char*  leidoCopiado = malloc(strlen(leido)+1);
-	strcpy(leidoCopiado,leido);
+	t_header* codOp = malloc(sizeof(t_header));
+	t_dest* destinatario = malloc(sizeof(t_dest));
+	t_list* parametros = list_create();
+	mensajeListoYSeparado* aMandar;
+	pthread_t hiloParaUnMensaje;
+	if(sintaxisYSemanticaValida(leido,codOp,destinatario,&parametros)){
+		aMandar = malloc(sizeof(mensajeListoYSeparado));
+		pthread_create(&hiloParaUnMensaje,0,(void*)procesarEntrada,aMandar);
+	}
+	list_add(hilosEnConsola,&hiloParaUnMensaje);
 
-	pthread_create(hiloParaUnMensaje,0,(void*)procesarEntrada,leidoCopiado);
-	list_add(hilosEnConsola,hiloParaUnMensaje);
 }
 
 /*void realizarEnvioMensaje(char* leido){

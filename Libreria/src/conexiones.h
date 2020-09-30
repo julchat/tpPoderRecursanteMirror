@@ -43,6 +43,7 @@ int socketEscucha;
 //int socket;
 t_log* logger;
 
+int crear_conexion(char *ip, char* puerto);
 int conexionServidor(char* host, int port, void*(*callback)());
 int iniciarServidor(int puerto);
 int crearSocket();

@@ -22,13 +22,13 @@
 typedef struct {
 
 	char* IP_COMANDA;
-	int PUERTO_COMANDA;
+	char* PUERTO_COMANDA;
 	char* IP_RESTAURANTE;
-	int PUERTO_RESTAURANTE;
+	char* PUERTO_RESTAURANTE;
 	char* IP_SINDICATO;
-	int PUERTO_SINDICATO;
+	char* PUERTO_SINDICATO;
 	char* IP_APP;
-	int PUERTO_APP;
+	char* PUERTO_APP;
 	char* ARCHIVO_LOG;
 	int POSICION_X;
 	int POSICION_Y;
@@ -44,13 +44,6 @@ typedef enum{
 	CLIENTE = 4,
 	ERR = 5
 }t_dest;
-
-typedef struct{
-	t_header codOp;
-	t_dest destinatario;
-	char** parametros;
-}parserMensaje;
-
 
 t_log* crear_logger_cliente(char*);
 cliente_config* leer_config_cliente(char*);

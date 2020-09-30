@@ -27,12 +27,18 @@
 t_config* config;
 t_log* logger;
 
+typedef struct{
+	t_header* operacion;
+	t_dest* destinatario;
+	t_list* parametros;
+}mensajeListoYSeparado;
+
 int connect_to_server(char* host,int port, void*(*callback)());
 int create_socket();
 void wait_connection(int socket_client);
 int accept_client(int servidor);
 void ejecutarConsola();
-void procesarEntrada(char* mensajeLeido);
+void procesarEntrada(mensajeListoYSeparado*);
 void declararHiloYMeterloALaLista(t_list* hilosEnConsola, char* leido);
 
 
