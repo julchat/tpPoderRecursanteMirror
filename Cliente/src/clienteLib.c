@@ -5,18 +5,13 @@ cliente_config* leer_config_cliente(char* path){
 	t_config* config_aux = config_create(path);
 	cliente_config* config_cliente_aux = malloc(sizeof(cliente_config));
 
-	config_cliente_aux->IP_COMANDA = config_get_string_value(config_aux,"IP_COMANDA");
-	config_cliente_aux->PUERTO_COMANDA = config_get_string_value(config_aux,"PUERTO_COMANDA");
-	config_cliente_aux->IP_RESTAURANTE = config_get_string_value(config_aux,"IP_RESTAURANTE");
-	config_cliente_aux->PUERTO_RESTAURANTE = config_get_string_value(config_aux,"PUERTO_RESTAURANTE");
-	config_cliente_aux->IP_SINDICATO = config_get_string_value(config_aux,"IP_SINDICATO");
-	config_cliente_aux->PUERTO_SINDICATO = config_get_string_value(config_aux,"PUERTO_SINDICATO");
-	config_cliente_aux->IP_APP = config_get_string_value(config_aux,"IP_APP");
+	config_cliente_aux->IP= config_get_string_value(config_aux,"IP");
+	config_cliente_aux->PUERTO= config_get_string_value(config_aux,"PUERTO");
 	config_cliente_aux->PUERTO_APP = config_get_string_value(config_aux,"PUERTO_APP");
 	config_cliente_aux->ARCHIVO_LOG = config_get_string_value(config_aux,"ARCHIVO_LOG");
 	config_cliente_aux->POSICION_X = config_get_int_value(config_aux,"POSICION_X");
 	config_cliente_aux->POSICION_Y = config_get_int_value(config_aux,"POSICION_Y");
-
+	config_cliente_aux->ID_CLIENTE = config_get_string_value(config_aux,"ID_CLIENTE");
 	return config_cliente_aux;
 
 }
@@ -306,6 +301,51 @@ t_list* dividirMensajeEnPartes(char** operacion,char** destinatario,char* mensaj
 		}
 	}
 	return parametros;
+}
+
+t_buffer* serializarUnMensaje(t_list* parametros){
+	t_buffer* buffer = malloc(sizeof(t_buffer));
+	int size = 0;
+	char* parametro;
+	uint16_t tamanioParametro;
+	for(int i = 0; i<parametros->elements_count; i++){
+		size += strlen(list_get(parametros,i))+1;
+	}
+	buffer->size = size;
+	void* stream = malloc(buffer->size);
+	int offset = 0;
+	for(int j = 0; j<parametros->elements_count;j++){
+		parametro = list_get(parametros,j);
+		tamanioParametro = strlen(parametro)+1;
+		memcpy(stream + offset, &tamanioParametro, sizeof(uint16_t));
+		offset = offset + sizeof(uint16_t);
+		memcpy(stream + offset, parametro, strlen(parametro)+1);
+		offset = offset + strlen(parametro)+1;
+	}
+	buffer->stream= stream;
+	list_destroy_and_destroy_elements(parametros,free);
+	return buffer;
+}
+
+int crear_conexion(char *ip, char* puerto){
+	struct addrinfo hints;
+	struct addrinfo *server_info;
+
+	memset(&hints, 0, sizeof(hints));
+	hints.ai_family = AF_UNSPEC;
+	hints.ai_socktype = SOCK_STREAM;
+	hints.ai_flags = AI_PASSIVE;
+
+	getaddrinfo(ip, puerto, &hints, &server_info);
+
+	int socket_cliente = socket(server_info->ai_family, server_info->ai_socktype, server_info->ai_protocol);
+
+	if(connect(socket_cliente, server_info->ai_addr, server_info->ai_addrlen) == -1)
+		printf("error");
+
+	freeaddrinfo(server_info);
+
+	return socket_cliente;
 }
 
 /*bool estaEnLaLista(t_dest* unElemento, t_list* unaLista){

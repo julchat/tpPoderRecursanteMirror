@@ -6,24 +6,17 @@ t_log* loggerCliente;
 
 int main(int argc, char *argv[]){
 
-	//configCliente = leer_config_cliente(argv[1]);
+	configCliente = leer_config_cliente(argv[1]);
 	//loggerCliente = crear_logger_cliente(configCliente->ARCHIVO_LOG);
-
-
 	pthread_t hiloConsola;
 	pthread_create(&hiloConsola, 0, (void*)ejecutarConsola, NULL);
 	pthread_join(hiloConsola,NULL);
-
 	/*conexion_servidor();
 	crear_socket();
-
 	//configuracion_cliente = leer_config_cliente();
-
 while(1){
 	esperar_conexion();
 }*/
-
-
 	return 0;
 }
 
@@ -54,7 +47,6 @@ void ejecutarConsola(){
 	while(strcmp(leido,"cerrar")){
 		declararHiloYMeterloALaLista(hilosEnConsola, leido);
 		free(leido);
-		wait(10);
 		leido = readline(">");
 	}
 	free(leido);
@@ -66,37 +58,25 @@ void ejecutarConsola(){
 }
 
 void procesarEntrada(mensajeListoYSeparado* paraMandar){
-	int socketDeHabla;
-	int socketDeEscucha;
-	switch(*(paraMandar->destinatario)){
-		case(APP):
-		socketDeHabla = crear_conexion(configCliente->IP_APP,configCliente->PUERTO_APP);
-		socketDeEscucha = crear_conexion(configCliente->IP_APP,configCliente->PUERTO_APP);
-		break;
-		case(RESTAURANTE):
-		socketDeHabla = crear_conexion(configCliente->IP_RESTAURANTE,configCliente->PUERTO_RESTAURANTE);
-		socketDeEscucha = crear_conexion(configCliente->IP_RESTAURANTE,configCliente->PUERTO_RESTAURANTE);
-		break;
-		case(COMANDA):
-		socketDeHabla = crear_conexion(configCliente->IP_COMANDA,configCliente->PUERTO_COMANDA);
-		socketDeEscucha = crear_conexion(configCliente->IP_COMANDA,configCliente->PUERTO_COMANDA);
-		break;
-		case(SINDICATO):
-		socketDeHabla = crear_conexion(configCliente->IP_SINDICATO,configCliente->PUERTO_SINDICATO);
-		socketDeEscucha = crear_conexion(configCliente->IP_SINDICATO,configCliente->PUERTO_SINDICATO);
-		break;
-		case(CLIENTE):
-		socketDeHabla = crear_conexion(configCliente->IP_APP,configCliente->PUERTO_APP);
-		socketDeEscucha = crear_conexion(configCliente->IP_APP,configCliente->PUERTO_APP);
-		break;
-		case(ERR):
-		//log?
-		break;
-	}
-
-	free(paraMandar->operacion);
+	int socketDeHabla = crear_conexion(configCliente->IP,configCliente->PUERTO);
+	int socketDeEscucha = crear_conexion(configCliente->IP,configCliente->PUERTO);
+	t_paquete* paquete = malloc(sizeof(t_paquete));
+	paquete->codOp = paraMandar->operacion;
+	paquete->buffer = serializarUnMensaje(paraMandar->parametros);
+	void* a_enviar = malloc(sizeof(uint8_t) + paquete->buffer->size);
+	int offset = 0;
+	memcpy(a_enviar + offset, &(paquete->codOp), sizeof(uint8_t));
+	offset = offset + sizeof(uint8_t);
+	memcpy(a_enviar + offset, &(paquete->buffer->size), sizeof(uint32_t));
+	offset = offset + sizeof(uint32_t);
+	memcpy(a_enviar + offset, paquete->buffer->stream, paquete->buffer->size);
+	offset = offset + paquete->buffer->size;
+	send(socketDeHabla, a_enviar, paquete->buffer->size + sizeof(uint8_t), 0);
+	free(a_enviar);
+	free(paquete->buffer->stream);
+	free(paquete->buffer);
+	free(paquete);
 	free(paraMandar->destinatario);
-	list_destroy_and_destroy_elements(paraMandar->parametros,free);
 	free(paraMandar);
 }
 

@@ -23,6 +23,8 @@
 #include "commons/log.h"
 
 #include "clienteLib.h"
+#include <serializacion.h>
+#include <conexiones.h>
 
 t_config* config;
 t_log* logger;

@@ -21,17 +21,13 @@
 
 typedef struct {
 
-	char* IP_COMANDA;
-	char* PUERTO_COMANDA;
-	char* IP_RESTAURANTE;
-	char* PUERTO_RESTAURANTE;
-	char* IP_SINDICATO;
-	char* PUERTO_SINDICATO;
-	char* IP_APP;
+	char* IP;
+	char* PUERTO;
 	char* PUERTO_APP;
 	char* ARCHIVO_LOG;
 	int POSICION_X;
 	int POSICION_Y;
+	char* ID_CLIENTE;
 }cliente_config;
 
 //cliente_config* clientStruct;
@@ -44,7 +40,8 @@ typedef enum{
 	CLIENTE = 4,
 	ERR = 5
 }t_dest;
-
+t_buffer* serializarUnMensaje(t_list* parametros);
+int crear_conexion(char *ip, char* puerto);
 t_log* crear_logger_cliente(char*);
 cliente_config* leer_config_cliente(char*);
 void leer_consola(t_log*);

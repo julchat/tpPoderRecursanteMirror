@@ -13,6 +13,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <commons/collections/list.h>
 
 typedef struct{
 
@@ -72,5 +73,6 @@ void* serializarObtenerRestaurante();
 void* serializarPlatoListo();
 void* serializarTerminarPedido();
 void* serializarObtenerReceta();
+t_buffer* serializarUnMensaje(t_list* parametros);
 
 #endif /* SERIALIZACION_H_ */
