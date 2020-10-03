@@ -1,6 +1,5 @@
 IP=127.0.0.1
 PUERTO=5001
-PUERTO_APP=5004
 ARCHIVO_LOG=/utnso/tp-2020-2c-PoderRecursante/cliente1.log
 POSICION_X=1
 POSICION_Y=2

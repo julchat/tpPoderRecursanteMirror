@@ -41,7 +41,7 @@
 
 //}
 
-t_buffer* serializarUnMensaje(t_list* parametros){
+/*t_buffer* serializarUnMensaje(t_list* parametros){
 	t_buffer* buffer = malloc(sizeof(t_buffer));
 	int size = 0;
 	char* parametro;
@@ -63,7 +63,7 @@ t_buffer* serializarUnMensaje(t_list* parametros){
 	buffer->stream= stream;
 	list_destroy_and_destroy_elements(parametros,free);
 	return buffer;
-}
+}*/
 
 
 

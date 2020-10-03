@@ -7,7 +7,6 @@ cliente_config* leer_config_cliente(char* path){
 
 	config_cliente_aux->IP= config_get_string_value(config_aux,"IP");
 	config_cliente_aux->PUERTO= config_get_string_value(config_aux,"PUERTO");
-	config_cliente_aux->PUERTO_APP = config_get_string_value(config_aux,"PUERTO_APP");
 	config_cliente_aux->ARCHIVO_LOG = config_get_string_value(config_aux,"ARCHIVO_LOG");
 	config_cliente_aux->POSICION_X = config_get_int_value(config_aux,"POSICION_X");
 	config_cliente_aux->POSICION_Y = config_get_int_value(config_aux,"POSICION_Y");
