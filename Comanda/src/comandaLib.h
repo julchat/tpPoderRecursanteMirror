@@ -32,4 +32,7 @@ typedef struct{
 comanda_config* leer_config_comanda(char*);
 t_log* crear_logger_comanda(char*);
 
+void* esperar_conexion(int);
+int iniciar_servidor(int);
+
 #endif /* TP0_H_ */
