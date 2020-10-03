@@ -25,4 +25,8 @@
 
 #include "comandaLib.h"
 
+comanda_config* comanda_configuracion;
+t_log* logger_comanda;
+int socket_escucha;
+
 #endif /* COMANDA_H_ */
