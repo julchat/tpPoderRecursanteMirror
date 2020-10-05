@@ -20,7 +20,7 @@ t_log* crear_logger_cliente(char* path){
 	return log_aux;
 }
 
-bool sintaxisYSemanticaValida(char* mensaje, t_header* codigoOperacion, t_dest* moduloDestino, t_list** parametros){
+bool sintaxisYSemanticaValida(char* mensaje, t_header* codigoOperacion, t_modulo* moduloDestino, t_list** parametros){
 	char* operacion;
 	char* destinatario;
 	*parametros = dividirMensajeEnPartes(&operacion,&destinatario,mensaje);
@@ -94,7 +94,7 @@ bool validarMatcheoOperacion(char* operacion, t_header* codigoALlenar){
 	}
 }
 
-bool validarMatcheoDestinatario(char* destinatario, t_dest* moduloALlenar){
+bool validarMatcheoDestinatario(char* destinatario, t_modulo* moduloALlenar){
 	if(strcmp(destinatario, "app")==0){
 		*moduloALlenar = APP;
 		return 1;
@@ -117,13 +117,13 @@ bool validarMatcheoDestinatario(char* destinatario, t_dest* moduloALlenar){
 	}
 }
 
-void obtenerModulosCompatiblesYcantParametrosRequerida(t_header codigoOperacion,t_dest moduloDestino,
+void obtenerModulosCompatiblesYcantParametrosRequerida(t_header codigoOperacion,t_modulo moduloDestino,
 		t_list** modulosCompatibles, int* cantParametros){
-	t_dest* moduloApp = malloc(sizeof(t_dest));
-	t_dest* moduloRestaurante = malloc(sizeof(t_dest));
-	t_dest* moduloSindicato = malloc(sizeof(t_dest));
-	t_dest* moduloComanda = malloc(sizeof(t_dest));
-	t_dest* moduloCliente = malloc(sizeof(t_dest));
+	t_modulo* moduloApp = malloc(sizeof(t_modulo));
+	t_modulo* moduloRestaurante = malloc(sizeof(t_modulo));
+	t_modulo* moduloSindicato = malloc(sizeof(t_modulo));
+	t_modulo* moduloComanda = malloc(sizeof(t_modulo));
+	t_modulo* moduloCliente = malloc(sizeof(t_modulo));
 	*moduloApp = APP;
 	*moduloRestaurante = RESTAURANTE;
 	*moduloSindicato = SINDICATO;
@@ -255,13 +255,13 @@ void obtenerModulosCompatiblesYcantParametrosRequerida(t_header codigoOperacion,
 	}
 }
 
-bool validarSemanticaMensaje(t_list* modulosCompatibles, int cantParametros, t_dest destinatario, t_list* parametros){
+bool validarSemanticaMensaje(t_list* modulosCompatibles, int cantParametros, t_modulo destinatario, t_list* parametros){
 	if(!(cantParametros == parametros->elements_count)){
 		printf("SE ESPERABA QUE EL MENSAJE TENGA %d PARAMETROS, Y TUVO %d PARAMETROS", cantParametros,parametros->elements_count);
 		return 0;
 	}
 
-	bool estaElDestEnLosCompatibles(t_dest* unModuloDeLaLista){
+	bool estaElDestEnLosCompatibles(t_modulo* unModuloDeLaLista){
 		return *unModuloDeLaLista == destinatario;
 	}
 	if(!(list_any_satisfy(modulosCompatibles, (bool*) estaElDestEnLosCompatibles))){

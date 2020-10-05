@@ -31,7 +31,7 @@ t_log* logger;
 
 typedef struct{
 	t_header* operacion;
-	t_dest* destinatario;
+	t_modulo* destinatario;
 	t_list* parametros;
 }mensajeListoYSeparado;
 

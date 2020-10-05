@@ -124,7 +124,7 @@ void procesarEntrada(mensajeListoYSeparado* paraMandar){
 
 void declararHiloYMeterloALaLista(t_list* hilosEnConsola, char* leido){
 	t_header* codOp = malloc(sizeof(t_header));
-	t_dest* destinatario = malloc(sizeof(t_dest));
+	t_modulo* destinatario = malloc(sizeof(t_modulo));
 	t_list* parametros = list_create();
 	mensajeListoYSeparado* aMandar;
 	pthread_t hiloParaUnMensaje;

@@ -43,6 +43,15 @@ int socketEscucha;
 //int socket;
 t_log* logger;
 
+typedef enum{
+	APP = 0,
+	RESTAURANTE = 1,
+	SINDICATO = 2,
+	COMANDA = 3,
+	CLIENTE = 4,
+	ERR = 5
+}t_modulo;
+
 int crear_conexion(char *ip, char* puerto);
 int conexionServidor(char* host, int port, void*(*callback)());
 int iniciarServidor(int puerto);

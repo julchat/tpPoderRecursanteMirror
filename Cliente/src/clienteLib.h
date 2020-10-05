@@ -31,14 +31,7 @@ typedef struct {
 
 //cliente_config* clientStruct;
 
-typedef enum{
-	APP = 0,
-	RESTAURANTE = 1,
-	SINDICATO = 2,
-	COMANDA = 3,
-	CLIENTE = 4,
-	ERR = 5
-}t_dest;
+
 
 typedef struct{
 	uint8_t idModulo;
@@ -53,11 +46,11 @@ t_log* crear_logger_cliente(char*);
 cliente_config* leer_config_cliente(char*);
 t_list* dividirMensajeEnPartes(char** operacion,char** destinatario,char* mensaje);
 void terminar_programa(int, t_log*, t_config*);
-bool sintaxisYSemanticaValida(char* mensaje, t_header* codigoOperacion, t_dest* moduloDestino, t_list** parametros);
+bool sintaxisYSemanticaValida(char* mensaje, t_header* codigoOperacion, t_modulo* moduloDestino, t_list** parametros);
 bool validarMatcheoOperacion(char* operacion, t_header* codigoPasadoPorReferencia);
-bool validarMatcheoDestinatario(char* destinatario, t_dest* moduloALlenar);
-void obtenerModulosCompatiblesYcantParametrosRequerida(t_header codigoOperacion,t_dest moduloDestino,
+bool validarMatcheoDestinatario(char* destinatario, t_modulo* moduloALlenar);
+void obtenerModulosCompatiblesYcantParametrosRequerida(t_header codigoOperacion,t_modulo moduloDestino,
 t_list** modulosCompatibles, int* cantParametros);
-bool validarSemanticaMensaje(t_list* modulosCompatibles, int cantParametros, t_dest destinatario, t_list* parametros);
-bool estaEnLaLista(t_dest* unElemento, t_list* unaLista);
+bool validarSemanticaMensaje(t_list* modulosCompatibles, int cantParametros, t_modulo destinatario, t_list* parametros);
+bool estaEnLaLista(t_modulo* unElemento, t_list* unaLista);
 #endif /* TP0_H_ */
