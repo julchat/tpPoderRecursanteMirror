@@ -53,7 +53,7 @@ typedef struct{
 
 typedef struct
 {
-	int size;
+	uint32_t size;
 	void* stream;
 } t_buffer;
 

@@ -23,7 +23,6 @@ typedef struct {
 
 	char* IP;
 	char* PUERTO;
-	char* PUERTO_APP;
 	char* ARCHIVO_LOG;
 	int POSICION_X;
 	int POSICION_Y;
@@ -40,12 +39,18 @@ typedef enum{
 	CLIENTE = 4,
 	ERR = 5
 }t_dest;
-//t_buffer* serializarUnMensaje(t_list* parametros);
-//int crear_conexion(char *ip, char* puerto);
+
+typedef struct{
+	uint8_t idModulo;
+	uint32_t tamanioId;
+	char* idCliente;
+	uint32_t posX;
+	uint32_t posY;
+}handshakeStruct;
+t_buffer* serializarUnMensaje(t_list* parametros);
+int crear_conexion(char *ip, char* puerto);
 t_log* crear_logger_cliente(char*);
 cliente_config* leer_config_cliente(char*);
-void leer_consola(t_log*);
-void paquete(int);
 t_list* dividirMensajeEnPartes(char** operacion,char** destinatario,char* mensaje);
 void terminar_programa(int, t_log*, t_config*);
 bool sintaxisYSemanticaValida(char* mensaje, t_header* codigoOperacion, t_dest* moduloDestino, t_list** parametros);

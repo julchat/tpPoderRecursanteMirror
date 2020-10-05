@@ -42,6 +42,6 @@ int accept_client(int servidor);
 void ejecutarConsola();
 void procesarEntrada(mensajeListoYSeparado*);
 void declararHiloYMeterloALaLista(t_list* hilosEnConsola, char* leido);
-
+bool realizarHandshake();
 
 #endif /* CLIENTE_H_ */
