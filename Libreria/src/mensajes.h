@@ -48,6 +48,15 @@ typedef struct {
 	pid_t idSuscriptor;
 } suscripcion;
 
+typedef enum{
+	APP = 0,
+	RESTAURANTE = 1,
+	SINDICATO = 2,
+	COMANDA = 3,
+	CLIENTE = 4,
+	ERR = 5
+}t_modulo;
+
 //<<<<<<< HEAD
 
 
