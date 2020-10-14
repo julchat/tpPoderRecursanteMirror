@@ -50,6 +50,7 @@ typedef struct {
 
 //<<<<<<< HEAD
 
+
 //=======
 /*Funciones a implementar para manejo de mensajes
 crear_mensaje

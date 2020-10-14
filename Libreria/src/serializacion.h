@@ -15,33 +15,32 @@
 #include <string.h>
 #include <commons/collections/list.h>
 
-typedef struct{
 
-}consultar_platos;
+// Estructuras de mensajes
 
-typedef struct{
+typedef struct {
 
-}guardar_pedido;
+	char* nombre_restaurante;
+	int id_pedido;
 
-typedef struct{
-
-}guardar_plato;
+}t_guardar_pedido,t_obtener_pedido,t_confirmar_pedido,t_finalizar_pedido;
 
 typedef struct{
 
-}confirmar_pedido;
+	char* nombre_restaurante;
+	int id_pedido;
+	char* plato_a_agregar;
+	int cantidad;
+
+}t_guardar_plato;
 
 typedef struct{
 
-}obtener_pedido;
+	char* nombre_restaurante;
+	int id_pedido;
+	char* plato_que_esta_listo;
 
-typedef struct{
-
-}obtener_restaurante;
-
-typedef struct{
-
-}plato_listo;
+}t_plato_listo;
 
 typedef struct{
 
