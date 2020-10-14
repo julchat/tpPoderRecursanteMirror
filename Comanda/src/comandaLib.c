@@ -33,19 +33,17 @@ void* esperar_conexion(int puerto){
 				if (socket_comanda > 0) {
 					log_info(logger_comanda, "NUEVA CONEXIÓN!");
 					pthread_t thread;
-					pthread_create(&thread, NULL, (void*) manejarSuscripciones, (void*) (socketRestaurante));
+					pthread_create(&thread, NULL, (void*) manejar_suscripciones, (void*) (socket_comanda));
 					pthread_detach(thread);
 				} else {
 					log_error(logger_comanda, "ERROR ACEPTANDO CONEXIONES: %s", strerror(errno));
 				}
 			} while (1);
-
-
 }
 
 
 int iniciar_servidor(int puerto){
-	int  socket;
+	int  socket_v;
 	int val = 1;
 	struct sockaddr_in servaddr;
 
@@ -53,22 +51,201 @@ int iniciar_servidor(int puerto){
 	servaddr.sin_addr.s_addr =INADDR_ANY;
 	servaddr.sin_port = htons(puerto);
 
-	socket = crearSocket();
-	if (socket < 0) {
+	socket_v = socket(AF_INET, SOCK_STREAM, 0);
+	if (socket_v < 0) {
 		char* error = strerror(errno);
 		perror(error);
 		free(error);
 		return EXIT_FAILURE;
 	}
 
-	setsockopt(socket, SOL_SOCKET, SO_REUSEADDR, &val, sizeof(val));
+	setsockopt(socket_v, SOL_SOCKET, SO_REUSEADDR, &val, sizeof(val));
 
-	if (bind(socket,(struct sockaddr*) &servaddr, sizeof(servaddr)) < 0) {
+	if (bind(socket_v,(struct sockaddr*) &servaddr, sizeof(servaddr)) < 0) {
 		return EXIT_FAILURE;
 	}
-	if (listen(socket, MAX_CLIENTS)< 0) {
+	if (listen(socket_v, MAX_CLIENTS)< 0) {
 		return EXIT_FAILURE;
 	}
 
-	return socket;
+	return socket_v;
+}
+
+
+void* manejar_suscripciones() {
+	int socket_envio = (int) (socket);
+	bool executing = true;
+
+	while(executing){
+		t_message* message = recibir_mensaje(socket_envio);
+		switch(message->head){
+			case CONSULTAR_RESTAURANTES:{
+				break;
+			}
+
+			case ANIADIR_PLATO:{
+				break;
+			}
+
+			case FINALIZAR_PEDIDO:{
+				break;
+			}
+
+			case CONSULTAR_PEDIDO:{
+				break;
+			}
+
+			case CREAR_PEDIDO:{
+				break;
+			}
+
+			case SELECCIONAR_RESTAURANTES:{
+				break;
+			}
+
+			case CONSULTAR_PLATOS:{
+				break;
+			}
+
+			case GUARDAR_PEDIDO:{
+				t_guardar_pedido* guardar_pedido = deserializar_guardar_pedido(message->content);
+
+				break;
+			}
+
+			case GUARDAR_PLATO:{
+				break;
+			}
+
+			case CONFIRMAR_PEDIDO:{
+				break;
+			}
+
+			case OBTENER_PEDIDO:{
+				break;
+			}
+
+			case OBTENER_RESTAURANTE:{
+				break;
+			}
+
+			case PLATO_LISTO:{
+				break;
+			}
+
+			case TERMINAR_PEDIDO:{
+				break;
+			}
+
+			case OBTENER_RECETA:{
+				break;
+			}
+
+			case SUSCRIPCION:{
+				break;
+			}
+
+			default:
+				break;
+		}
+	}
+	return NULL;
+}
+
+t_message* recibir_mensaje(int socket){
+	t_message * message = malloc(sizeof(t_message));
+
+	int res = recv(socket,&message->size,sizeof(size_t),MSG_WAITALL);
+	if (res <= 0 ){
+		close(socket);
+		free(message);
+		return error(res);
+	}
+
+	void* buffer = malloc(message->size);
+	res = recv(socket,buffer,message->size,MSG_WAITALL);
+
+
+	if(res <= 0){
+		close(socket);
+		free(message);
+		free(buffer);
+		return error(res);
+	}
+
+	message->content = calloc(message->size - sizeof(t_header)+1,1);
+	memcpy(&message->head, buffer, sizeof(t_header));
+	memcpy(message->content,buffer + sizeof(t_header),message->size - sizeof(t_header));
+	message->size = message->size - sizeof(t_header);
+
+	free(buffer);
+	return message;
+}
+
+// Sirve para guardar_pedido - obtener_pedido - confirmar_pedido - finalizar_pedido pues comparten struct
+
+void* deserializar_guardar_pedido(void* contenido){
+
+	t_guardar_pedido* guardar_pedido = malloc(sizeof(t_guardar_pedido));
+
+	void* stream = contenido;
+
+	memcpy(&(guardar_pedido->nombre_restaurante->size_nombre),stream,sizeof(uint32_t));
+	stream += sizeof(uint32_t);
+	guardar_pedido->nombre_restaurante->nombre = malloc(guardar_pedido->nombre_restaurante->size_nombre);
+	memcpy(&(guardar_pedido->nombre_restaurante->nombre),stream,guardar_pedido->nombre_restaurante->size_nombre);
+	stream += guardar_pedido->nombre_restaurante->size_nombre;
+	memcpy(&(guardar_pedido->id_pedido),stream,sizeof(uint32_t));
+	stream += sizeof(uint32_t);
+
+	return guardar_pedido;
+
+
+}
+
+void* deserializar_guardar_plato(void* contenido){
+
+	t_guardar_plato* plato_guardado = malloc(sizeof(t_guardar_plato));
+
+		void* stream = contenido;
+
+			memcpy(&(plato_guardado->nombre_restaurante->size_nombre),stream,sizeof(uint32_t));
+			stream += sizeof(uint32_t);
+			plato_guardado->nombre_restaurante->nombre = malloc(plato_guardado->nombre_restaurante->size_nombre);
+			memcpy(&(plato_guardado->nombre_restaurante->nombre),stream,plato_guardado->nombre_restaurante->size_nombre);
+			stream += plato_guardado->nombre_restaurante->size_nombre;
+			memcpy(&(plato_guardado->id_pedido),stream,sizeof(uint32_t));
+			stream += sizeof(uint32_t);
+			memcpy(&(plato_guardado->plato_a_agregar->size_nombre),stream,sizeof(uint32_t));
+			stream += sizeof(uint32_t);
+			plato_guardado->plato_a_agregar->nombre = malloc(plato_guardado->plato_a_agregar->size_nombre);
+			memcpy(&(plato_guardado->plato_a_agregar->nombre),stream,plato_guardado->plato_a_agregar->size_nombre);
+			stream += plato_guardado->plato_a_agregar->size_nombre;
+			memcpy(&(plato_guardado->cantidad),stream,sizeof(uint32_t));
+			stream += sizeof(uint32_t);
+
+			return plato_guardado;
+
+}
+
+void* deserializar_plato_listo(void* contenido){
+
+	t_plato_listo* plato_listo = malloc(sizeof(t_plato_listo));
+
+	void* stream = contenido;
+
+		memcpy(&(plato_listo->nombre_restaurante->size_nombre),stream,sizeof(uint32_t));
+		stream += sizeof(uint32_t);
+		plato_listo->nombre_restaurante->nombre = malloc(plato_listo->nombre_restaurante->size_nombre);
+		memcpy(&(plato_listo->nombre_restaurante->nombre),stream,plato_listo->nombre_restaurante->size_nombre);
+		stream += plato_listo->nombre_restaurante->size_nombre;
+		memcpy(&(plato_listo->id_pedido),stream,sizeof(uint32_t));
+		stream += sizeof(uint32_t);
+		memcpy(&(plato_listo->plato_que_esta_listo->size_nombre),stream,sizeof(uint32_t));
+		stream += sizeof(uint32_t);
+		plato_listo->plato_que_esta_listo->nombre = malloc(plato_listo->plato_que_esta_listo->size_nombre);
+		memcpy(&(plato_listo->plato_que_esta_listo->nombre),stream,plato_listo->plato_que_esta_listo->size_nombre);
+		stream += plato_listo->plato_que_esta_listo->size_nombre;
+
+		return plato_listo;
 }

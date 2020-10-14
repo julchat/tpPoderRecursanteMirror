@@ -9,14 +9,13 @@ int main(int argc, char *argv[]){
 
 
 	comanda_configuracion = leer_config_comanda(argv[1]);
-
 	logger_comanda = crear_logger_comanda(comanda_configuracion->ARCHIVO_LOG);
 
-	//---------------------------------------------------------------------------------------//
 
 	void* memoria_principal = malloc(sizeof(comanda_configuracion->TAMANIO_MEMORIA));
 	void* memoria_swap = malloc(sizeof(comanda_configuracion->TAMANIO_SWAP));
 
+	t_list* restaurantes = list_create();
 
 	esperar_conexion(comanda_configuracion->PUERTO_ESCUCHA);
 
