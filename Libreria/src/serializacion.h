@@ -63,7 +63,12 @@ typedef struct
 	t_buffer* buffer;
 } t_paquete;
 
-
+typedef struct
+{
+t_modulo moduloConectado;
+bool escucha;
+} t_identificadorSocket;
+t_identificadorSocket* deserealizarRespuestaHandshake(t_paquete*);
 void* serializarConsultarPlatos();
 void* serializarGuardarPedido();
 void* serializarGuardarPlato();

@@ -65,5 +65,17 @@
 	return buffer;
 }*/
 
-
+t_identificadorSocket* deserealizarRespuestaHandshake(t_paquete* paqueteRecibido){
+	t_buffer* buffer = paqueteRecibido->buffer;
+	t_identificadorSocket* resultado = malloc(buffer->size);
+	int offset = 0;
+	memcpy(&resultado->moduloConectado, buffer->stream+offset, sizeof(t_modulo));
+	offset += sizeof(t_modulo);
+	memcpy(&resultado->escucha, buffer->stream+offset, sizeof(bool));
+	offset += sizeof(bool);
+	free(buffer->stream);
+	free(buffer);
+	free(paqueteRecibido);
+	return resultado;
+}
 

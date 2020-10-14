@@ -5,14 +5,28 @@ cliente_config* configCliente;
 t_log* loggerCliente;
 int socketDeHabla;
 int socketDeEscucha;
+t_modulo moduloConectado;
+pthread_t hiloEsperaApp;
+pthread_t hiloEsperaRestaurante;
 int main(int argc, char *argv[]){
 	configCliente = leer_config_cliente(argv[1]);
 	printf("%s",configCliente->ARCHIVO_LOG);
 	loggerCliente = crear_logger_cliente(configCliente->ARCHIVO_LOG);
 	if(realizarHandshake()){
+		if(moduloConectado == APP){
+			pthread_create(&hiloEsperaApp,0, (void*) escucharApp, NULL);
+		} else if (moduloConectado == RESTAURANTE){
+			pthread_create(&hiloEsperaRestaurante,0,(void*) escucharRestaurante, NULL);
+		}
 	pthread_t hiloConsola;
 	pthread_create(&hiloConsola, 0, (void*)ejecutarConsola, NULL);
 	pthread_join(hiloConsola,NULL);
+	if(moduloConectado == APP){
+		pthread_join(hiloEsperaApp);
+	}
+	else if (moduloConectado == RESTAURANTE){
+		pthread_join(hiloEsperaRestaurante);
+	}
 	return 0;
 	}
 	else{
@@ -23,8 +37,10 @@ int main(int argc, char *argv[]){
 
 bool realizarHandshake(){
 	int socket1, socket2, ressend1, ressend2, resrecv1, resrecv2;
-	char* recibidoPrimerSocket = malloc(strlen("habla")+1);
-	char* recibidoSegundoSocket = malloc(strlen("escuc")+1);
+	void* recibidoPrimerSocket = malloc(sizeof(t_paquete)+ sizeof(uint8_t) +sizeof(uint32_t) + sizeof(t_modulo) + sizeof(bool));
+	void* recibidoSegundoSocket = malloc(sizeof(t_paquete)+ sizeof(uint8_t) +sizeof(uint32_t) + sizeof(t_modulo) + sizeof(bool));
+	t_identificadorSocket* respuestaPrimerSocket;
+	t_identificadorSocket* respuestaSegundoSocket;
 	handshakeStruct* infoAMandar = malloc(sizeof(handshakeStruct));
 	infoAMandar->idModulo = 4;
 	infoAMandar->idCliente = configCliente->ID_CLIENTE;
@@ -59,16 +75,18 @@ bool realizarHandshake(){
 	if(ressend1 == -1 || ressend2 == -1){
 			return 0;
 	}
-	resrecv1 = recv(socket1, recibidoPrimerSocket, 6,0);
-	resrecv2 = recv(socket2, recibidoSegundoSocket, 6, 0);
+	resrecv1 = recv(socket1, recibidoPrimerSocket, sizeof(t_paquete)+ sizeof(uint8_t) +sizeof(uint32_t) + sizeof(t_modulo) + sizeof(bool),0);
+	resrecv2 = recv(socket2, recibidoSegundoSocket, sizeof(t_paquete)+ sizeof(uint8_t) +sizeof(uint32_t) + sizeof(t_modulo) + sizeof(bool), 0);
 	if(resrecv1 == -1 || resrecv2 == -1){
 			return 0;
 	}
-	if(strcmp(recibidoPrimerSocket, "habla") == 0 && strcmp(recibidoSegundoSocket, "escuc")== 0){
+	respuestaPrimerSocket = deserealizarRespuestaHandshake(recibidoPrimerSocket);
+	respuestaSegundoSocket = deserealizarRespuestaHandshake(recibidoSegundoSocket);
+	if(respuestaPrimerSocket->escucha == 0 && respuestaSegundoSocket->escucha == 1){
 		socketDeHabla = socket1;
 		socketDeEscucha = socket2;
 	}
-	else if(strcmp(recibidoPrimerSocket, "escuc") == 0 && strcmp(recibidoSegundoSocket,"habla")==0){
+	else if(respuestaPrimerSocket->escucha == 1 && respuestaSegundoSocket->escucha == 0){
 		socketDeHabla = socket2;
 		socketDeEscucha = socket1;
 	}
@@ -76,9 +94,27 @@ bool realizarHandshake(){
 		printf("la conexion aparentemente anduvo bien pero la respuesta no fue la pactada");
 		return 0;
 	}
+	switch(respuestaPrimerSocket->moduloConectado){
+		case APP:
+			moduloConectado = APP;
+			break;
+		case RESTAURANTE:
+			moduloConectado = RESTAURANTE;
+			break;
+		case SINDICATO:
+			moduloConectado = SINDICATO;
+			break;
+		case COMANDA:
+			moduloConectado = COMANDA;
+			break;
+		default:
+			printf("no se conecto a un modulo valido");
+	}
 	free(infoAMandar);
 	free(recibidoPrimerSocket);
 	free(recibidoSegundoSocket);
+	free(respuestaPrimerSocket);
+	free(respuestaSegundoSocket);
 	return 1;
 }
 
@@ -136,3 +172,10 @@ void declararHiloYMeterloALaLista(t_list* hilosEnConsola, char* leido){
 
 }
 
+void escucharApp(){
+
+}
+
+void escucharRestaurante(){
+
+}

@@ -40,6 +40,7 @@ typedef struct{
 	uint32_t posX;
 	uint32_t posY;
 }handshakeStruct;
+
 t_buffer* serializarUnMensaje(t_list* parametros);
 int crear_conexion(char *ip, char* puerto);
 t_log* crear_logger_cliente(char*);
