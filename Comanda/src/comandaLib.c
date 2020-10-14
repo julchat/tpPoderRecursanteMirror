@@ -23,9 +23,9 @@ t_log* crear_logger_comanda(char* path){
 }
 
 
-void* esperar_conexion(int puerto){
-	socket_escucha = iniciar_servidor(puerto);
-		log_info(logger_comanda, "SERVIDOR LEVANTADO! ESCUCHANDO EN %i",comanda_configuracion->PUERTO_ESCUCHA);
+void* esperar_conexion(int puerto,int* socket_escucha, t_log* logger_comanda){ // ESTO ESTA FEO, NO ME TOMA LAS GLOBALES
+	*socket_escucha = iniciar_servidor(puerto);
+		log_info(logger_comanda, "SERVIDOR LEVANTADO! ESCUCHANDO EN %i",puerto);
 		struct sockaddr cliente;
 			socklen_t len = sizeof(cliente);
 			do {
@@ -110,6 +110,11 @@ void* manejar_suscripciones() {
 			case GUARDAR_PEDIDO:{
 				t_guardar_pedido* guardar_pedido = deserializar_guardar_pedido(message->content);
 
+
+
+
+				//acordarse de liberal los mallocs dentro de los deserializadores (TODOS)
+
 				break;
 			}
 
@@ -142,12 +147,16 @@ void* manejar_suscripciones() {
 			}
 
 			case SUSCRIPCION:{
+
 				break;
 			}
 
 			default:
 				break;
 		}
+
+		free(message->content);
+		free(message);
 	}
 	return NULL;
 }
@@ -190,11 +199,11 @@ void* deserializar_guardar_pedido(void* contenido){
 
 	void* stream = contenido;
 
-	memcpy(&(guardar_pedido->nombre_restaurante->size_nombre),stream,sizeof(uint32_t));
+	memcpy(&(guardar_pedido->nombre_restaurante.size_nombre),stream,sizeof(uint32_t));
 	stream += sizeof(uint32_t);
-	guardar_pedido->nombre_restaurante->nombre = malloc(guardar_pedido->nombre_restaurante->size_nombre);
-	memcpy(&(guardar_pedido->nombre_restaurante->nombre),stream,guardar_pedido->nombre_restaurante->size_nombre);
-	stream += guardar_pedido->nombre_restaurante->size_nombre;
+	guardar_pedido->nombre_restaurante.nombre = malloc(guardar_pedido->nombre_restaurante.size_nombre);
+	memcpy((guardar_pedido->nombre_restaurante.nombre),stream,guardar_pedido->nombre_restaurante.size_nombre);
+	stream += guardar_pedido->nombre_restaurante.size_nombre;
 	memcpy(&(guardar_pedido->id_pedido),stream,sizeof(uint32_t));
 	stream += sizeof(uint32_t);
 
@@ -209,18 +218,18 @@ void* deserializar_guardar_plato(void* contenido){
 
 		void* stream = contenido;
 
-			memcpy(&(plato_guardado->nombre_restaurante->size_nombre),stream,sizeof(uint32_t));
+			memcpy(&(plato_guardado->nombre_restaurante.size_nombre),stream,sizeof(uint32_t));
 			stream += sizeof(uint32_t);
-			plato_guardado->nombre_restaurante->nombre = malloc(plato_guardado->nombre_restaurante->size_nombre);
-			memcpy(&(plato_guardado->nombre_restaurante->nombre),stream,plato_guardado->nombre_restaurante->size_nombre);
-			stream += plato_guardado->nombre_restaurante->size_nombre;
+			plato_guardado->nombre_restaurante.nombre = malloc(plato_guardado->nombre_restaurante.size_nombre);
+			memcpy(&(plato_guardado->nombre_restaurante.nombre),stream,plato_guardado->nombre_restaurante.size_nombre);
+			stream += plato_guardado->nombre_restaurante.size_nombre;
 			memcpy(&(plato_guardado->id_pedido),stream,sizeof(uint32_t));
 			stream += sizeof(uint32_t);
-			memcpy(&(plato_guardado->plato_a_agregar->size_nombre),stream,sizeof(uint32_t));
+			memcpy(&(plato_guardado->plato_a_agregar.size_nombre),stream,sizeof(uint32_t));
 			stream += sizeof(uint32_t);
-			plato_guardado->plato_a_agregar->nombre = malloc(plato_guardado->plato_a_agregar->size_nombre);
-			memcpy(&(plato_guardado->plato_a_agregar->nombre),stream,plato_guardado->plato_a_agregar->size_nombre);
-			stream += plato_guardado->plato_a_agregar->size_nombre;
+			plato_guardado->plato_a_agregar.nombre = malloc(plato_guardado->plato_a_agregar.size_nombre);
+			memcpy(&(plato_guardado->plato_a_agregar.nombre),stream,plato_guardado->plato_a_agregar.size_nombre);
+			stream += plato_guardado->plato_a_agregar.size_nombre;
 			memcpy(&(plato_guardado->cantidad),stream,sizeof(uint32_t));
 			stream += sizeof(uint32_t);
 
@@ -234,18 +243,18 @@ void* deserializar_plato_listo(void* contenido){
 
 	void* stream = contenido;
 
-		memcpy(&(plato_listo->nombre_restaurante->size_nombre),stream,sizeof(uint32_t));
+		memcpy(&(plato_listo->nombre_restaurante.size_nombre),stream,sizeof(uint32_t));
 		stream += sizeof(uint32_t);
-		plato_listo->nombre_restaurante->nombre = malloc(plato_listo->nombre_restaurante->size_nombre);
-		memcpy(&(plato_listo->nombre_restaurante->nombre),stream,plato_listo->nombre_restaurante->size_nombre);
-		stream += plato_listo->nombre_restaurante->size_nombre;
+		plato_listo->nombre_restaurante.nombre = malloc(plato_listo->nombre_restaurante.size_nombre);
+		memcpy(&(plato_listo->nombre_restaurante.nombre),stream,plato_listo->nombre_restaurante.size_nombre);
+		stream += plato_listo->nombre_restaurante.size_nombre;
 		memcpy(&(plato_listo->id_pedido),stream,sizeof(uint32_t));
 		stream += sizeof(uint32_t);
-		memcpy(&(plato_listo->plato_que_esta_listo->size_nombre),stream,sizeof(uint32_t));
+		memcpy(&(plato_listo->plato_que_esta_listo.size_nombre),stream,sizeof(uint32_t));
 		stream += sizeof(uint32_t);
-		plato_listo->plato_que_esta_listo->nombre = malloc(plato_listo->plato_que_esta_listo->size_nombre);
-		memcpy(&(plato_listo->plato_que_esta_listo->nombre),stream,plato_listo->plato_que_esta_listo->size_nombre);
-		stream += plato_listo->plato_que_esta_listo->size_nombre;
+		plato_listo->plato_que_esta_listo.nombre = malloc(plato_listo->plato_que_esta_listo.size_nombre);
+		memcpy(&(plato_listo->plato_que_esta_listo.nombre),stream,plato_listo->plato_que_esta_listo.size_nombre);
+		stream += plato_listo->plato_que_esta_listo.size_nombre;
 
 		return plato_listo;
 }

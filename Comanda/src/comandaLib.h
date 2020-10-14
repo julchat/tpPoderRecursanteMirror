@@ -29,6 +29,13 @@ typedef struct{
 
 }comanda_config;
 
+typedef struct{
+
+	uint32_t size_nombre;
+	char* nombre;
+
+}t_nombre;
+
 typedef struct {
 
 	t_nombre nombre_restaurante;
@@ -53,17 +60,11 @@ typedef struct{
 
 }t_plato_listo;
 
-typedef struct{
-
-	int size_nombre;
-	char* nombre;
-
-}t_nombre;
 
 comanda_config* leer_config_comanda(char*);
 t_log* crear_logger_comanda(char*);
 
-void* esperar_conexion(int);
+void* esperar_conexion(int,int*,t_log*);
 int iniciar_servidor(int);
 void* manejar_suscripciones();
 t_message* recibir_mensaje(int);
