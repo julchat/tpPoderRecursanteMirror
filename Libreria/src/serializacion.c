@@ -65,17 +65,15 @@
 	return buffer;
 }*/
 
-t_identificadorSocket* deserealizarRespuestaHandshake(t_paquete* paqueteRecibido){
-	t_buffer* buffer = paqueteRecibido->buffer;
-	t_identificadorSocket* resultado = malloc(buffer->size);
+/*t_identificadorSocket* deserealizarRespuestaHandshake(t_message* paqueteRecibido){
+	t_identificadorSocket* resultado = malloc(paqueteRecibido->size - sizeof(t_header));
 	int offset = 0;
-	memcpy(&resultado->moduloConectado, buffer->stream+offset, sizeof(t_modulo));
+	memcpy(&resultado->moduloConectado, paqueteRecibido->content + offset, sizeof(t_modulo));
 	offset += sizeof(t_modulo);
-	memcpy(&resultado->escucha, buffer->stream+offset, sizeof(bool));
+	memcpy(&resultado->escucha, paqueteRecibido->content + offset, sizeof(bool));
 	offset += sizeof(bool);
-	free(buffer->stream);
-	free(buffer);
+	free(paqueteRecibido->content);
 	free(paqueteRecibido);
 	return resultado;
-}
+}*/
 

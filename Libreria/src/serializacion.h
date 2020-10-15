@@ -68,7 +68,7 @@ typedef struct
 t_modulo moduloConectado;
 bool escucha;
 } t_identificadorSocket;
-t_identificadorSocket* deserealizarRespuestaHandshake(t_paquete*);
+//t_identificadorSocket* deserealizarRespuestaHandshake(t_message*);
 void* serializarConsultarPlatos();
 void* serializarGuardarPedido();
 void* serializarGuardarPlato();
@@ -78,6 +78,6 @@ void* serializarObtenerRestaurante();
 void* serializarPlatoListo();
 void* serializarTerminarPedido();
 void* serializarObtenerReceta();
-t_buffer* serializarUnMensaje(t_list* parametros);
+//t_buffer* serializarUnMensaje(t_list* parametros);
 
 #endif /* SERIALIZACION_H_ */

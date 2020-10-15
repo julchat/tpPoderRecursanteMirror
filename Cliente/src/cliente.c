@@ -6,27 +6,14 @@ t_log* loggerCliente;
 int socketDeHabla;
 int socketDeEscucha;
 t_modulo moduloConectado;
-pthread_t hiloEsperaApp;
-pthread_t hiloEsperaRestaurante;
 int main(int argc, char *argv[]){
 	configCliente = leer_config_cliente(argv[1]);
 	printf("%s",configCliente->ARCHIVO_LOG);
 	loggerCliente = crear_logger_cliente(configCliente->ARCHIVO_LOG);
 	if(realizarHandshake()){
-		if(moduloConectado == APP){
-			pthread_create(&hiloEsperaApp,0, (void*) escucharApp, NULL);
-		} else if (moduloConectado == RESTAURANTE){
-			pthread_create(&hiloEsperaRestaurante,0,(void*) escucharRestaurante, NULL);
-		}
 	pthread_t hiloConsola;
 	pthread_create(&hiloConsola, 0, (void*)ejecutarConsola, NULL);
 	pthread_join(hiloConsola,NULL);
-	if(moduloConectado == APP){
-		pthread_join(hiloEsperaApp);
-	}
-	else if (moduloConectado == RESTAURANTE){
-		pthread_join(hiloEsperaRestaurante);
-	}
 	return 0;
 	}
 	else{
@@ -47,13 +34,12 @@ bool realizarHandshake(){
 	infoAMandar->tamanioId = strlen(infoAMandar->idCliente)+1;
 	infoAMandar->posX = configCliente->POSICION_X;
 	infoAMandar->posY = configCliente->POSICION_Y;
-	t_paquete* paquete = malloc(sizeof(t_paquete));
-	paquete->codOp = 16;
-	t_buffer* buffer = malloc(sizeof(t_buffer));
-	buffer->size = sizeof(uint8_t) + infoAMandar->tamanioId + sizeof(uint32_t) + 2*sizeof(uint32_t);
-	void* stream = malloc(buffer->size);
+	t_message* paquete = malloc(sizeof(t_message));
+	paquete->head = 16;
+	paquete->size = sizeof(t_header) + sizeof(t_modulo) + infoAMandar->tamanioId + sizeof(uint32_t) + 2*sizeof(uint32_t);
+	void* stream = malloc(paquete->size);
 	int offset = 0;
-	memcpy(stream + offset, &infoAMandar->idModulo, sizeof(uint8_t));
+	memcpy(stream + offset, &infoAMandar->idModulo, sizeof(t_modulo));
 	offset += sizeof(uint8_t);
 	memcpy(stream + offset, &infoAMandar->tamanioId, sizeof(uint32_t));
 	offset += sizeof(uint32_t);
@@ -63,23 +49,22 @@ bool realizarHandshake(){
 	offset += sizeof(uint32_t);
 	memcpy(stream + offset, &infoAMandar->posY, sizeof(uint32_t));
 	offset += sizeof(uint32_t);
-	buffer->stream = stream;
-	paquete->buffer = buffer;
+	paquete->content= stream;
 	socket1 = crear_conexion(configCliente->IP,configCliente->PUERTO);
 	socket2 = crear_conexion(configCliente->IP,configCliente->PUERTO);
-	ressend1 = send(socket1, paquete, paquete->buffer->size + sizeof(uint8_t) + sizeof(uint32_t), 0 );
-	ressend2 = send(socket2, paquete, paquete->buffer->size + sizeof(uint8_t) + sizeof(uint32_t), 0 );
-	free(paquete->buffer->stream);
-	free(paquete->buffer);
+	ressend1 = send(socket1, &paquete->size, sizeof(size_t), 0);
+	ressend2 = send(socket2, &paquete->size, sizeof(size_t), 0);
+	validarConexion(ressend1, ressend2);
+	ressend1 = send(socket1, &paquete->head,sizeof(t_header),0);
+	ressend1 = send(socket2, &paquete->head,sizeof(t_header),0);
+	validarConexion(ressend1, ressend2);
+	ressend1 = send(socket1, paquete->content, paquete->size - sizeof(t_header),0);
+	ressend1 = send(socket1, paquete->content, paquete->size - sizeof(t_header),0);
+	validarConexion(ressend1, ressend2);
+	free(paquete->content);
 	free(paquete);
-	if(ressend1 == -1 || ressend2 == -1){
-			return 0;
-	}
-	resrecv1 = recv(socket1, recibidoPrimerSocket, sizeof(t_paquete)+ sizeof(uint8_t) +sizeof(uint32_t) + sizeof(t_modulo) + sizeof(bool),0);
-	resrecv2 = recv(socket2, recibidoSegundoSocket, sizeof(t_paquete)+ sizeof(uint8_t) +sizeof(uint32_t) + sizeof(t_modulo) + sizeof(bool), 0);
-	if(resrecv1 == -1 || resrecv2 == -1){
-			return 0;
-	}
+	recibidoPrimerSocket = recibirMensaje(socket1);
+	recibidoSegundoSocket = recibirMensaje(socket2);
 	respuestaPrimerSocket = deserealizarRespuestaHandshake(recibidoPrimerSocket);
 	respuestaSegundoSocket = deserealizarRespuestaHandshake(recibidoSegundoSocket);
 	if(respuestaPrimerSocket->escucha == 0 && respuestaSegundoSocket->escucha == 1){
@@ -138,21 +123,14 @@ void ejecutarConsola(){
 }
 
 void procesarEntrada(mensajeListoYSeparado* paraMandar){
-	t_paquete* paquete = malloc(sizeof(t_paquete));
-	paquete->codOp = paraMandar->operacion;
-	paquete->buffer = serializarUnMensaje(paraMandar->parametros);
-	void* a_enviar = malloc(sizeof(uint8_t) + paquete->buffer->size);
-	int offset = 0;
-	memcpy(a_enviar + offset, &(paquete->codOp), sizeof(uint8_t));
-	offset = offset + sizeof(uint8_t);
-	memcpy(a_enviar + offset, &(paquete->buffer->size), sizeof(uint32_t));
-	offset = offset + sizeof(uint32_t);
-	memcpy(a_enviar + offset, paquete->buffer->stream, paquete->buffer->size);
-	offset = offset + paquete->buffer->size;
-	send(socketDeHabla, a_enviar, paquete->buffer->size + sizeof(uint8_t), 0);
-	free(a_enviar);
-	free(paquete->buffer->stream);
-	free(paquete->buffer);
+	t_message* paquete = malloc(sizeof(t_message));
+	int size;
+	paquete->head = *paraMandar->operacion;
+	paquete->content = serializarUnMensaje(paraMandar->parametros, &size);
+	send(socketDeHabla, &paquete->size, sizeof(size_t), 0);
+	send(socketDeHabla, &paquete->head, sizeof(t_header), 0);
+	send(socketDeHabla, paquete->content, paquete->size - sizeof(t_header),0);
+	free(paquete->content);
 	free(paquete);
 	free(paraMandar->destinatario);
 	free(paraMandar);

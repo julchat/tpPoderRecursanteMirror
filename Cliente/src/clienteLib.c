@@ -302,16 +302,16 @@ t_list* dividirMensajeEnPartes(char** operacion,char** destinatario,char* mensaj
 	return parametros;
 }
 
-t_buffer* serializarUnMensaje(t_list* parametros){
-	t_buffer* buffer = malloc(sizeof(t_buffer));
-	int size = 0;
+void* serializarUnMensaje(t_list* parametros, int* size){
+	int tamanio = 0;
 	char* parametro;
 	uint16_t tamanioParametro;
 	for(int i = 0; i<parametros->elements_count; i++){
-		size += strlen(list_get(parametros,i))+1;
+		tamanio += strlen(list_get(parametros,i))+1;
+		tamanio += sizeof(uint16_t);
 	}
-	buffer->size = size;
-	void* stream = malloc(buffer->size);
+	*size = tamanio;
+	void* stream = malloc(tamanio);
 	int offset = 0;
 	for(int j = 0; j<parametros->elements_count;j++){
 		parametro = list_get(parametros,j);
@@ -321,9 +321,8 @@ t_buffer* serializarUnMensaje(t_list* parametros){
 		memcpy(stream + offset, parametro, strlen(parametro)+1);
 		offset = offset + strlen(parametro)+1;
 	}
-	buffer->stream= stream;
 	list_destroy_and_destroy_elements(parametros,free);
-	return buffer;
+	return stream;
 }
 
 int crear_conexion(char *ip, char* puerto){
@@ -347,4 +346,50 @@ int crear_conexion(char *ip, char* puerto){
 	return socket_cliente;
 }
 
+t_identificadorSocket* deserealizarRespuestaHandshake(t_message* paqueteRecibido){
+	t_identificadorSocket* resultado = malloc(paqueteRecibido->size - sizeof(t_header));
+	int offset = 0;
+	memcpy(&resultado->moduloConectado, paqueteRecibido->content + offset, sizeof(t_modulo));
+	offset += sizeof(t_modulo);
+	memcpy(&resultado->escucha, paqueteRecibido->content + offset, sizeof(bool));
+	offset += sizeof(bool);
+	free(paqueteRecibido->content);
+	free(paqueteRecibido);
+	return resultado;
+}
 
+t_message* recibirMensaje(int socket){
+	t_message * message = malloc(sizeof(t_message));
+
+	int res = recv(socket,&message->size,sizeof(size_t),MSG_WAITALL);
+	if (res <= 0 ){
+		close(socket);
+		free(message);
+		return error(res);
+	}
+
+	void* buffer = malloc(message->size);
+	res = recv(socket,buffer,message->size,MSG_WAITALL);
+
+
+	if(res <= 0){
+		close(socket);
+		free(message);
+		free(buffer);
+		return error(res);
+	}
+
+	message->content = calloc(message->size - sizeof(t_header)+1,1);
+	memcpy(&message->head, buffer, sizeof(t_header));
+	memcpy(message->content,buffer + sizeof(t_header),message->size - sizeof(t_header));
+	message->size = message->size - sizeof(t_header);
+
+	free(buffer);
+	return message;
+}
+
+void validarConexion(int socket1, int socket2){
+	if(socket1 <= 0 || socket2 <= 0){
+		printf("fallo el envio del handshake");
+	}
+}
