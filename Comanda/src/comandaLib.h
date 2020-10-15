@@ -66,7 +66,7 @@ t_log* crear_logger_comanda(char*);
 
 void* esperar_conexion(int,int*,t_log*);
 int iniciar_servidor(int);
-void* manejar_suscripciones();
+void* manejar_suscripciones(int*);
 t_message* recibir_mensaje(int);
 
 void* deserializar_guardar_pedido(void*);

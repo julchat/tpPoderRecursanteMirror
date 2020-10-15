@@ -33,7 +33,8 @@ void* esperar_conexion(int puerto,int* socket_escucha, t_log* logger_comanda){ /
 				if (socket_comanda > 0) {
 					log_info(logger_comanda, "NUEVA CONEXIÓN!");
 					pthread_t thread;
-					pthread_create(&thread, NULL, (void*) manejar_suscripciones, (void*) (socket_comanda));
+					pthread_create(&thread, NULL, (void*) manejar_suscripciones, (int*) socket_comanda);
+					pthread_join(&thread, NULL);
 					pthread_detach(thread);
 				} else {
 					log_error(logger_comanda, "ERROR ACEPTANDO CONEXIONES: %s", strerror(errno));
@@ -72,12 +73,12 @@ int iniciar_servidor(int puerto){
 }
 
 
-void* manejar_suscripciones() {
-	int socket_envio = (int) (socket);
+void* manejar_suscripciones(int* socket_envio) {
+	//int socket_envio = (int) (socket);
 	bool executing = true;
 
 	while(executing){
-		t_message* message = recibir_mensaje(socket_envio);
+		t_message* message = recibir_mensaje(*socket_envio);
 		switch(message->head){
 			case CONSULTAR_RESTAURANTES:{
 				break;
@@ -147,7 +148,7 @@ void* manejar_suscripciones() {
 			}
 
 			case SUSCRIPCION:{
-
+			printf("funciono la conexion me llego el mensaje del handshake");
 				break;
 			}
 
