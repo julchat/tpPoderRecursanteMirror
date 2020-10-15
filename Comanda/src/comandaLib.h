@@ -18,7 +18,7 @@
 #include "utils.h"
 #include "conexiones.h"
 #include "mensajes.h"
-
+#include <pthread.h>
 typedef struct{
 
 	int PUERTO_ESCUCHA;

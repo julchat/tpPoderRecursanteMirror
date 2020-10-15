@@ -29,7 +29,7 @@ void* esperar_conexion(int puerto,int* socket_escucha, t_log* logger_comanda){ /
 		struct sockaddr cliente;
 			socklen_t len = sizeof(cliente);
 			do {
-				int socket_comanda = accept(socket_escucha, &cliente, &len);
+				int socket_comanda = accept(*socket_escucha, &cliente, &len);
 				if (socket_comanda > 0) {
 					log_info(logger_comanda, "NUEVA CONEXIÓN!");
 					pthread_t thread;

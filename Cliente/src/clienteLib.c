@@ -391,5 +391,6 @@ t_message* recibirMensaje(int socket){
 void validarConexion(int socket1, int socket2){
 	if(socket1 <= 0 || socket2 <= 0){
 		printf("fallo el envio del handshake");
+		exit(253);
 	}
 }
