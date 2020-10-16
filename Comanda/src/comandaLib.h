@@ -19,6 +19,9 @@
 #include "conexiones.h"
 #include "mensajes.h"
 #include <pthread.h>
+
+// -------------------- Estructuras administrativas de Comanda -------------------
+
 typedef struct{
 
 	int PUERTO_ESCUCHA;
@@ -28,6 +31,33 @@ typedef struct{
 	char* ARCHIVO_LOG;
 
 }comanda_config;
+
+// -------------------- Estructuras para el manejo de memoria ---------------------
+
+typedef struct{
+
+	t_list* tabla_de_paginas;
+	uint32_t id_pedido;
+
+}t_segmento;
+
+typedef struct{
+
+	void* inicio_memoria;
+	uint8_t presente;
+	uint32_t numero_pagina;
+
+}t_pagina;
+
+typedef struct{
+
+	char* nombre_restaurante;
+	t_list* pedidos;
+
+}t_restaurante;
+
+
+// -------------------- Estructuras para la serialización -------------------------
 
 typedef struct{
 
@@ -60,6 +90,7 @@ typedef struct{
 
 }t_plato_listo;
 
+// ----------------------------------- Firma de funciones ------------------------------
 
 comanda_config* leer_config_comanda(char*);
 t_log* crear_logger_comanda(char*);
