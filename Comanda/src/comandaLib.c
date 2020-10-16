@@ -24,18 +24,19 @@ t_log* crear_logger_comanda(char* path){
 
 
 void* esperar_conexion(int puerto,int* socket_escucha, t_log* logger_comanda){ // ESTO ESTA FEO, NO ME TOMA LAS GLOBALES
+	t_list* hilos = list_create();
 	*socket_escucha = iniciar_servidor(puerto);
 		log_info(logger_comanda, "SERVIDOR LEVANTADO! ESCUCHANDO EN %i",puerto);
 		struct sockaddr cliente;
 			socklen_t len = sizeof(cliente);
 			do {
-				int socket_comanda = accept(*socket_escucha, &cliente, &len);
-				if (socket_comanda > 0) {
+				int* socket_comanda;
+				*socket_comanda = accept(*socket_escucha, &cliente, &len);
+				if (*socket_comanda > 0) {
 					log_info(logger_comanda, "NUEVA CONEXIÓN!");
-					pthread_t thread;
-					pthread_create(&thread, NULL, (void*) manejar_suscripciones, (int*) socket_comanda);
-					pthread_join(&thread, NULL);
-					pthread_detach(thread);
+					crear_hilo_para_manejar_suscripciones(&hilos, *socket_comanda);
+					//pthread_t thread;
+					//pthread_create(&thread, NULL, (void*) manejar_suscripciones, socket_comanda);
 				} else {
 					log_error(logger_comanda, "ERROR ACEPTANDO CONEXIONES: %s", strerror(errno));
 				}
@@ -258,4 +259,10 @@ void* deserializar_plato_listo(void* contenido){
 		stream += plato_listo->plato_que_esta_listo.size_nombre;
 
 		return plato_listo;
+}
+
+void crear_hilo_para_manejar_suscripciones(t_list** lista_hilos, int socket){
+	pthread_t hilo_conectado;
+	pthread_create(&hilo_conectado , NULL, (void*) manejar_suscripciones, &socket);
+	list_add(*lista_hilos, hilo_conectado);
 }
