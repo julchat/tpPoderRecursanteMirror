@@ -25,12 +25,13 @@ t_log* crear_logger_comanda(char* path){
 
 void* esperar_conexion(int puerto,int* socket_escucha, t_log* logger_comanda){ // ESTO ESTA FEO, NO ME TOMA LAS GLOBALES
 	t_list* hilos = list_create();
+	socket_escucha = malloc(sizeof(int));
 	*socket_escucha = iniciar_servidor(puerto);
+	int* socket_comanda = malloc(sizeof(int));
 		log_info(logger_comanda, "SERVIDOR LEVANTADO! ESCUCHANDO EN %i",puerto);
 		struct sockaddr cliente;
 			socklen_t len = sizeof(cliente);
 			do {
-				int* socket_comanda;
 				*socket_comanda = accept(*socket_escucha, &cliente, &len);
 				if (*socket_comanda > 0) {
 					log_info(logger_comanda, "NUEVA CONEXIÓN!");
@@ -173,23 +174,25 @@ t_message* recibir_mensaje(int socket){
 		return error(res);
 	}
 
-	void* buffer = malloc(message->size);
-	res = recv(socket,buffer,message->size,MSG_WAITALL);
-
+	message->size = message->size - sizeof(t_header);
+	res = recv(socket,&message->head,sizeof(t_header),MSG_WAITALL);
 
 	if(res <= 0){
 		close(socket);
 		free(message);
-		free(buffer);
 		return error(res);
 	}
 
-	message->content = calloc(message->size - sizeof(t_header)+1,1);
-	memcpy(&message->head, buffer, sizeof(t_header));
-	memcpy(message->content,buffer + sizeof(t_header),message->size - sizeof(t_header));
-	message->size = message->size - sizeof(t_header);
+	message->content = malloc(message->size);
+	res = recv(socket,message->content,message->size, MSG_WAITALL);
 
-	free(buffer);
+	if(res <= 0){
+		close(socket);
+		free(message->content);
+		free(message);
+		return error(res);
+	}
+
 	return message;
 }
 
@@ -264,5 +267,5 @@ void* deserializar_plato_listo(void* contenido){
 void crear_hilo_para_manejar_suscripciones(t_list** lista_hilos, int socket){
 	pthread_t hilo_conectado;
 	pthread_create(&hilo_conectado , NULL, (void*) manejar_suscripciones, &socket);
-	list_add(*lista_hilos, hilo_conectado);
+	list_add(*lista_hilos, &hilo_conectado);
 }

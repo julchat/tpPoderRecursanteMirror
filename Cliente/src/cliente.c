@@ -56,10 +56,10 @@ bool realizarHandshake(){
 	ressend2 = send(socket2, &paquete->size, sizeof(size_t), 0);
 	validarConexion(ressend1, ressend2);
 	ressend1 = send(socket1, &paquete->head,sizeof(t_header),0);
-	ressend1 = send(socket2, &paquete->head,sizeof(t_header),0);
+	ressend2 = send(socket2, &paquete->head,sizeof(t_header),0);
 	validarConexion(ressend1, ressend2);
 	ressend1 = send(socket1, paquete->content, paquete->size - sizeof(t_header),0);
-	ressend1 = send(socket1, paquete->content, paquete->size - sizeof(t_header),0);
+	ressend2 = send(socket2, paquete->content, paquete->size - sizeof(t_header),0);
 	validarConexion(ressend1, ressend2);
 	free(paquete->content);
 	free(paquete);

@@ -103,4 +103,6 @@ t_message* recibir_mensaje(int);
 void* deserializar_guardar_pedido(void*);
 void* deserializar_guardar_plato(void*);
 
+void crear_hilo_para_manejar_suscripciones(t_list**, int);
+
 #endif /* TP0_H_ */
