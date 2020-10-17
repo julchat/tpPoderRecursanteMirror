@@ -269,3 +269,20 @@ void crear_hilo_para_manejar_suscripciones(t_list** lista_hilos, int socket){
 	pthread_create(&hilo_conectado , NULL, (void*) manejar_suscripciones, &socket);
 	list_add(*lista_hilos, &hilo_conectado);
 }
+
+
+t_list* inicializar_frames(int tamanio_memoria){
+	int cantidad_frames = tamanio_memoria / 32;
+	t_list* frames = list_create();
+	int offset = 0;
+	for(int i=0; i<cantidad_frames; i++){
+
+		t_frame_en_memoria* un_frame = malloc(sizeof(t_frame_en_memoria));
+		un_frame->inicio = memoria_principal + offset;
+		un_frame->pagina_a_la_que_pertenece = NULL;
+		list_add(frames,un_frame);
+	}
+	printf("La memoria principal comienza en %i,el ultimo frame está en %i",(int)memoria_principal);
+	return frames;
+
+}
