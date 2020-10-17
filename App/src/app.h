@@ -33,6 +33,30 @@ typedef enum {
 	SJF_SD
 } t_planificadores;
 
+typedef enum {
+	NEW,
+	READY,
+	EXEC,
+	BLOCK,
+	EXIT
+}t_estado;
+
+typedef struct {
+
+	t_list* repartidores;
+	t_list* repartidoresReady;
+	t_list* repartidoresDesocupados; //todos los repartidores comienzan en este.
+	t_list* hiloRepartidores;
+	t_list* mapa;
+	t_planificadores planificador;
+
+}t_App;
+
+typedef struct {
+
+
+}t_Repartidor;
+
 app_config* appConfiguracion;
 t_log* loggerApp;
 int socketEscucha;
