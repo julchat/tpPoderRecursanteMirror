@@ -12,12 +12,13 @@ int main(int argc, char *argv[]){
 	logger_comanda = crear_logger_comanda(comanda_configuracion->ARCHIVO_LOG);
 
 
-	void* memoria_principal = malloc(sizeof(comanda_configuracion->TAMANIO_MEMORIA));
-	void* memoria_swap = malloc(sizeof(comanda_configuracion->TAMANIO_SWAP));
+	memoria_principal = malloc(sizeof(comanda_configuracion->TAMANIO_MEMORIA));
+	memoria_swap = malloc(sizeof(comanda_configuracion->TAMANIO_SWAP));
 
 	//t_list* restaurantes = list_create();
 
 	esperar_conexion(comanda_configuracion->PUERTO_ESCUCHA,&socket_escucha,logger_comanda);
+	inicializar_frames;
 
 
 

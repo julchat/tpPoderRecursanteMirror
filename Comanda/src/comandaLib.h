@@ -19,6 +19,7 @@
 #include "conexiones.h"
 #include "mensajes.h"
 #include <pthread.h>
+#include <comanda.h>
 
 // -------------------- Estructuras administrativas de Comanda -------------------
 
@@ -34,6 +35,7 @@ typedef struct{
 
 // -------------------- Estructuras para el manejo de memoria ---------------------
 
+
 typedef struct{
 
 	t_list* tabla_de_paginas;
@@ -48,6 +50,13 @@ typedef struct{
 	uint32_t numero_pagina;
 
 }t_pagina;
+
+typedef struct{
+
+	void* inicio;
+	t_pagina* pagina_a_la_que_pertenece;
+
+}t_frame_en_memoria;
 
 typedef struct{
 
@@ -104,5 +113,7 @@ void* deserializar_guardar_pedido(void*);
 void* deserializar_guardar_plato(void*);
 
 void crear_hilo_para_manejar_suscripciones(t_list**, int);
+
+t_list* inicializar_frames(int);
 
 #endif /* TP0_H_ */

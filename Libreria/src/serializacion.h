@@ -14,7 +14,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <commons/collections/list.h>
-#include "mensajes.h"
+#include "conexiones.h"
 
 
 // Estructuras de mensajes
