@@ -4,7 +4,6 @@ cliente_config* leer_config_cliente(char* path){
 
 	t_config* config_aux = config_create(path);
 	cliente_config* config_cliente_aux = malloc(sizeof(cliente_config));
-
 	config_cliente_aux->IP= config_get_string_value(config_aux,"IP");
 	config_cliente_aux->PUERTO= config_get_string_value(config_aux,"PUERTO");
 	config_cliente_aux->ARCHIVO_LOG = config_get_string_value(config_aux,"ARCHIVO_LOG");
@@ -12,7 +11,6 @@ cliente_config* leer_config_cliente(char* path){
 	config_cliente_aux->POSICION_Y = config_get_int_value(config_aux,"POSICION_Y");
 	config_cliente_aux->ID_CLIENTE = config_get_string_value(config_aux,"ID_CLIENTE");
 	return config_cliente_aux;
-
 }
 
 t_log* crear_logger_cliente(char* path){
@@ -358,7 +356,7 @@ t_identificadorSocket* deserealizarRespuestaHandshake(t_message* paqueteRecibido
 	return resultado;
 }
 
-t_message* recibirMensaje(int socket){
+/*t_message* recibirMensaje(int socket){
 	t_message * message = malloc(sizeof(t_message));
 
 	int res = recv(socket,&message->size,sizeof(size_t),MSG_WAITALL);
@@ -386,11 +384,11 @@ t_message* recibirMensaje(int socket){
 
 	free(buffer);
 	return message;
-}
+}*/
 
 void validarConexion(int socket1, int socket2){
 	if(socket1 <= 0 || socket2 <= 0){
 		printf("fallo el envio del handshake");
-		exit(253);
+		exit(252);
 	}
 }

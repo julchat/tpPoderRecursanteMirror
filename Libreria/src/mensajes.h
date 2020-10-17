@@ -67,7 +67,7 @@ enviar_mensaje
 recibir_mensaje
 liberar_mensaje
   */
-t_message* recibirMensaje(int socket);;
+t_message* recibirMensaje(int socket);
 t_message* crearMensaje(t_header head, size_t size,const void* content);
 t_message* error(int res);
 void liberarMensaje(t_message* message);

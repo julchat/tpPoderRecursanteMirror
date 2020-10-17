@@ -55,6 +55,6 @@ t_list** modulosCompatibles, int* cantParametros);
 bool validarSemanticaMensaje(t_list* modulosCompatibles, int cantParametros, t_modulo destinatario, t_list* parametros);
 bool estaEnLaLista(t_modulo* unElemento, t_list* unaLista);
 t_identificadorSocket* deserealizarRespuestaHandshake(t_message* paqueteRecibido);
-t_message* recibirMensaje(int socket);
+//t_message* recibirMensaje(int socket);
 void validarConexion(int socket1, int socket2);
 #endif /* TP0_H_ */
