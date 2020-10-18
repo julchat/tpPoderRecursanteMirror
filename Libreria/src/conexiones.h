@@ -21,7 +21,7 @@
 #include <arpa/inet.h>
 #include <commons/log.h>
 #include "mensajes.h"
-
+#include <pthread.h>
 #define MAX_CLIENTS 128
 
 char* ipSindicato;
@@ -50,5 +50,5 @@ int crearSocket();
 void* colaServidor(int puerto);
 void* colaCliente(void* cola, char* ip, int puerto);
 void* manejarSuscripciones();
-
+bool consultarNecesidadSegundoSocket(t_modulo cliente, t_modulo servidor);
 #endif /* CONEXIONES_H_ */

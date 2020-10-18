@@ -203,4 +203,24 @@ int crear_conexion(char *ip, char* puerto){
 	return socket_cliente;
 }
 
+bool consultarNecesidadSegundoSocket(t_modulo cliente, t_modulo servidor){
+	switch(cliente){
+	case CLIENTE:
+		switch(servidor){
+		case APP:
+			return 1;
+			break;
+		case RESTAURANTE:
+			return 1;
+			break;
+		case COMANDA:
+			return 0;
+			break;
+		case SINDICATO:
+			return 0;
+			break;
+		}
+	}
+	return 0;
+}
 
