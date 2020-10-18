@@ -52,6 +52,8 @@ bool realizarHandshake(){
 	paquete->content= stream;
 	socket1 = crear_conexion(configCliente->IP,configCliente->PUERTO);
 	socket2 = crear_conexion(configCliente->IP,configCliente->PUERTO);
+	recv(socket1);
+	recv(socket2);
 	ressend1 = send(socket1, &paquete->size, sizeof(size_t), 0);
 	ressend2 = send(socket2, &paquete->size, sizeof(size_t), 0);
 	validarConexion(ressend1, ressend2);

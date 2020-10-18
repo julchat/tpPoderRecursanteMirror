@@ -78,7 +78,7 @@ int iniciar_servidor(int puerto){
 void* manejar_suscripciones(int* socket_envio) {
 	//int socket_envio = (int) (socket);
 	bool executing = true;
-
+	mandar_tipo_socket(*socket_envio);
 	while(executing){
 		t_message* message = recibir_mensaje(*socket_envio);
 		switch(message->head){
@@ -284,5 +284,6 @@ t_list* inicializar_frames(int tamanio_memoria){
 	}
 	printf("La memoria principal comienza en %i,el ultimo frame está en %i",(int)memoria_principal);
 	return frames;
-
 }
+
+
