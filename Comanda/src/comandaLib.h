@@ -5,8 +5,8 @@
  *      Author: utnso
  */
 
-#ifndef TP0_H_
-#define TP0_H_
+#ifndef COMANDA_LIB_H
+#define COMANDA_LIB_H
 
 #include<stdio.h>
 #include<stdlib.h>
@@ -15,11 +15,11 @@
 #include<commons/config.h>
 #include<commons/collections/list.h>
 
-#include "utils.h"
+
 #include "conexiones.h"
 #include "mensajes.h"
 #include <pthread.h>
-#include <comanda.h>
+
 
 // -------------------- Estructuras administrativas de Comanda -------------------
 
@@ -116,4 +116,4 @@ void crear_hilo_para_manejar_suscripciones(t_list**, int);
 
 t_list* inicializar_frames(int);
 
-#endif /* TP0_H_ */
+#endif /* COMANDA_LIB_H */

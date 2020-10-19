@@ -1,4 +1,4 @@
-#include "comandaLib.h"
+#include "comanda.h"
 
 comanda_config* leer_config_comanda(char* path){
 
@@ -78,7 +78,6 @@ int iniciar_servidor(int puerto){
 void* manejar_suscripciones(int* socket_envio) {
 	//int socket_envio = (int) (socket);
 	bool executing = true;
-	mandar_tipo_socket(*socket_envio);
 	while(executing){
 		t_message* message = recibir_mensaje(*socket_envio);
 		switch(message->head){
@@ -282,7 +281,7 @@ t_list* inicializar_frames(int tamanio_memoria){
 		un_frame->pagina_a_la_que_pertenece = NULL;
 		list_add(frames,un_frame);
 	}
-	printf("La memoria principal comienza en %i,el ultimo frame está en %i",(int)memoria_principal);
+	printf("La memoria principal comienza en %i,el ultimo frame está en %i",(int)memoria_principal,(int) ((t_frame_en_memoria*)list_get(frames,31))->inicio);
 	return frames;
 }
 
