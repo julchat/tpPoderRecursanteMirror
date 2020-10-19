@@ -19,37 +19,37 @@
 
 // Estructuras de mensajes
 
+typedef struct{
+	uint32_t idCliente;
+	char* nombreRestaurante;
+}t_seleccionarRestaurante;
+
+typedef struct{
+	uint32_t idPedido;
+	char* plato;
+}t_aniadirPlato;
+
+
 typedef struct {
-
-	char* nombre_restaurante;
-	int id_pedido;
-
-}t_guardar_pedido,t_obtener_pedido,t_confirmar_pedido,t_finalizar_pedido;
+	uint32_t idPedido;
+	char* nombreRestaurante;
+}t_guardarPedido,t_obtenerPedido,t_confirmarPedido,t_finalizarPedido, t_terminarPedido;
 
 typedef struct{
+	uint32_t idPedido;
+	uint32_t cantidad;
+	char* nombreRestaurante;
+	char* platoParaAgregar;
 
-	char* nombre_restaurante;
-	int id_pedido;
-	char* plato_a_agregar;
-	int cantidad;
 
-}t_guardar_plato;
-
-typedef struct{
-
-	char* nombre_restaurante;
-	int id_pedido;
-	char* plato_que_esta_listo;
-
-}t_plato_listo;
+}t_guardarPlato;
 
 typedef struct{
+	uint32_t idPedido;
+	char* nombreRestaurante;
+	char* platoListo;
 
-}terminar_pedido;
-
-typedef struct{
-
-}obtener_receta;
+}t_platoListo;
 
 typedef struct
 {
@@ -69,15 +69,19 @@ t_modulo moduloConectado;
 bool escucha;
 } t_identificadorSocket;
 //t_identificadorSocket* deserealizarRespuestaHandshake(t_message*);
-void* serializarConsultarPlatos();
-void* serializarGuardarPedido();
-void* serializarGuardarPlato();
-void* serializarConfirmarPedido();
-void* serializarObtenerPedido();
-void* serializarObtenerRestaurante();
-void* serializarPlatoListo();
-void* serializarTerminarPedido();
-void* serializarObtenerReceta();
+void* serializarSeleccionarRestaurante(t_seleccionarRestaurante);
+void* serializarObtenerRestaurante(char* nombreRestaurante);
+void* serializarConsultarPlatos(char* nombreRestaurante);
+void* serializarGuardarPedido(t_guardarPedido);
+void* serializarAniadirPlato(t_aniadirPlato);
+void* serializarGuardarPlato(t_guardarPlato);
+void* serializarConfirmarPedido(t_confirmarPedido);
+void* serializarPlatoListo(t_platoListo);
+void* serializarConsultarPedido(uint32_t idPedido);
+void* serializarObtenerPedido(t_obtenerPedido);
+void* serializarFinalizarPedido(t_finalizarPedido);
+void* serializarTerminarPedido(t_terminarPedido);
+void* serializarObtenerReceta(char* nombrePlato);
 //t_buffer* serializarUnMensaje(t_list* parametros);
 
 #endif /* SERIALIZACION_H_ */

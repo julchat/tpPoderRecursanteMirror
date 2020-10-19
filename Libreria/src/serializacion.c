@@ -16,30 +16,180 @@
 
 	//return contenido;
 //}
-//void* serializarGuardarPedido(){
+//PRIMERO VAN LOS UINT32_Ts y DESPUÉS LOS PARES DE TAMAÑO DE CHAR* CON SU CHAR*
 
-//}
-//void* serializarGuardarPlato(){
+void* serializarSeleccionarRestaurante(t_seleccionarRestaurante info){
+	void* content = malloc(sizeof(uint32_t) + sizeof(uint32_t) + strlen(info.nombreRestaurante)+1);
+	int offset = 0;
+	uint32_t tamanioRestaurante = strlen(info.nombreRestaurante) +1;
+	memcpy(content, &info.idCliente, sizeof(uint32_t));
+	offset += sizeof(uint32_t);
+	memcpy(content, &tamanioRestaurante, sizeof(uint32_t));
+	offset += sizeof(uint32_t);
+	memcpy(content, info.nombreRestaurante, tamanioRestaurante);
+	offset += tamanioRestaurante;
+	free(info.nombreRestaurante);
+	return content;
+}
+void* serializarObtenerRestaurante(char* nombreRestaurante){
+	void* content = malloc(sizeof(uint32_t)+strlen(nombreRestaurante)+1);
+	int offset = 0;
+	uint32_t tamanioRestaurante = strlen(nombreRestaurante)+1;
+	memcpy(content, &tamanioRestaurante, sizeof(uint32_t));
+	offset += sizeof(uint32_t);
+	memcpy(content, nombreRestaurante, tamanioRestaurante);
+	offset += tamanioRestaurante;
+	free(nombreRestaurante);
+	return content;
+}
+void* serializarConsultarPlatos(char* nombreRestaurante){
+	void* content = malloc(sizeof(uint32_t)+strlen(nombreRestaurante)+1);
+	int offset = 0;
+	uint32_t tamanioRestaurante = strlen(nombreRestaurante)+1;
+	memcpy(content, &tamanioRestaurante, sizeof(uint32_t));
+	offset += sizeof(uint32_t);
+	memcpy(content, nombreRestaurante, tamanioRestaurante);
+	offset += tamanioRestaurante;
+	free(nombreRestaurante);
+	return content;
+}
 
-//}
-//void* serializarConfirmarPedido(){
-
-//}
-//void* serializarObtenerPedido(){
-
-//}
-//void* serializarObtenerRestaurante(){
-
-//}
-//void* serializarPlatoListo(){
-
-//}
-///void* serializarTerminarPedido(){
-
-//}
-//void* serializarObtenerReceta(){
-
-//}
+void* serializarGuardarPedido(t_guardarPedido info){
+	void* content = malloc(sizeof(uint32_t) + sizeof(uint32_t) + strlen(info.nombreRestaurante)+1);
+	int offset = 0;
+	uint32_t tamanioRestaurante = strlen(info.nombreRestaurante) +1;
+	memcpy(content, &info.idPedido, sizeof(uint32_t));
+	offset += sizeof(uint32_t);
+	memcpy(content, &tamanioRestaurante, sizeof(uint32_t));
+	offset += sizeof(uint32_t);
+	memcpy(content, info.nombreRestaurante, tamanioRestaurante);
+	offset += tamanioRestaurante;
+	free(info.nombreRestaurante);
+	return content;
+}
+void* serializarAniadirPlato(t_aniadirPlato info){
+	void* content = malloc(sizeof(uint32_t) + sizeof(uint32_t) + strlen(info.plato)+1);
+	int offset = 0;
+	uint32_t tamanioPlato = strlen(info.plato) +1;
+	memcpy(content, &info.idPedido, sizeof(uint32_t));
+	offset += sizeof(uint32_t);
+	memcpy(content, &tamanioPlato, sizeof(uint32_t));
+	offset += sizeof(uint32_t);
+	memcpy(content, info.plato, tamanioPlato);
+	offset += tamanioPlato;
+	free(info.plato);
+	return content;
+}
+void* serializarGuardarPlato(t_guardarPlato info){
+	void* content = malloc(sizeof(uint32_t) + strlen(info.nombreRestaurante)+1 + sizeof(uint32_t) + sizeof(uint32_t) + strlen(info.platoParaAgregar)+1 + sizeof(uint32_t));
+	int offset = 0;
+	uint32_t tamanioRestaurante = strlen(info.nombreRestaurante)+1;
+	uint32_t tamanioPlato = strlen(info.platoParaAgregar)+1;
+	memcpy(content, &info.idPedido, sizeof(uint32_t));
+	offset+= sizeof(uint32_t);
+	memcpy(content, &info.cantidad, sizeof(uint32_t));
+	offset+= sizeof(uint32_t);
+	memcpy(content, &tamanioRestaurante, sizeof(uint32_t));
+	offset+= sizeof(uint32_t);
+	memcpy(content, info.nombreRestaurante, tamanioRestaurante);
+	offset+= tamanioRestaurante;
+	memcpy(content, &tamanioPlato, sizeof(uint32_t));
+	offset+= sizeof(uint32_t);
+	memcpy(content, info.platoParaAgregar, tamanioPlato);
+	offset+= tamanioPlato;
+	free(info.nombreRestaurante);
+	free(info.platoParaAgregar);
+	return content;
+}
+void* serializarConfirmarPedido(t_confirmarPedido info){
+	void* content = malloc(sizeof(uint32_t) + sizeof(uint32_t) + strlen(info.nombreRestaurante)+1);
+	int offset = 0;
+	uint32_t tamanioRestaurante = strlen(info.nombreRestaurante) +1;
+	memcpy(content, &info.idPedido, sizeof(uint32_t));
+	offset += sizeof(uint32_t);
+	memcpy(content, &tamanioRestaurante, sizeof(uint32_t));
+	offset += sizeof(uint32_t);
+	memcpy(content, info.nombreRestaurante, tamanioRestaurante);
+	offset += tamanioRestaurante;
+	free(info.nombreRestaurante);
+	return content;
+}
+void* serializarPlatoListo(t_platoListo info){
+	void* content = malloc(sizeof(uint32_t) + sizeof(uint32_t) + strlen(info.nombreRestaurante)+1 + sizeof(uint32_t) + strlen(info.platoListo) + 1);
+	int offset = 0;
+	uint32_t tamanioRestaurante = strlen(info.nombreRestaurante)+1;
+	uint32_t tamanioPlato = strlen(info.platoListo)+1;
+	memcpy(content, &info.idPedido, sizeof(uint32_t));
+	offset+= sizeof(uint32_t);
+	memcpy(content, &tamanioRestaurante, sizeof(uint32_t));
+	offset+= sizeof(uint32_t);
+	memcpy(content, info.nombreRestaurante, tamanioRestaurante);
+	offset+= tamanioRestaurante;
+	memcpy(content, &tamanioPlato, sizeof(uint32_t));
+	offset+= sizeof(uint32_t);
+	memcpy(content, info.platoListo, tamanioPlato);
+	offset+= tamanioPlato;
+	free(info.nombreRestaurante);
+	free(info.platoListo);
+	return content;
+}
+void* serializarConsultarPedido(uint32_t idPedido){
+	void* content = malloc(sizeof(uint32_t));
+	int offset = 0;
+	memcpy(content, &idPedido, sizeof(uint32_t));
+	offset+= sizeof(uint32_t);
+	return content;
+}
+void* serializarObtenerPedido(t_obtenerPedido info){
+	void* content = malloc(sizeof(uint32_t) + sizeof(uint32_t) + strlen(info.nombreRestaurante)+1);
+	int offset = 0;
+	uint32_t tamanioRestaurante = strlen(info.nombreRestaurante) +1;
+	memcpy(content, &info.idPedido, sizeof(uint32_t));
+	offset += sizeof(uint32_t);
+	memcpy(content, &tamanioRestaurante, sizeof(uint32_t));
+	offset += sizeof(uint32_t);
+	memcpy(content, info.nombreRestaurante, tamanioRestaurante);
+	offset += tamanioRestaurante;
+	free(info.nombreRestaurante);
+	return content;
+}
+void* serializarFinalizarPedido(t_finalizarPedido info){
+	void* content = malloc(sizeof(uint32_t) + sizeof(uint32_t) + strlen(info.nombreRestaurante)+1);
+	int offset = 0;
+	uint32_t tamanioRestaurante = strlen(info.nombreRestaurante) +1;
+	memcpy(content, &info.idPedido, sizeof(uint32_t));
+	offset += sizeof(uint32_t);
+	memcpy(content, &tamanioRestaurante, sizeof(uint32_t));
+	offset += sizeof(uint32_t);
+	memcpy(content, info.nombreRestaurante, tamanioRestaurante);
+	offset += tamanioRestaurante;
+	free(info.nombreRestaurante);
+	return content;
+}
+void* serializarTerminarPedido(t_terminarPedido info){
+	void* content = malloc(sizeof(uint32_t) + sizeof(uint32_t) + strlen(info.nombreRestaurante)+1);
+	int offset = 0;
+	uint32_t tamanioRestaurante = strlen(info.nombreRestaurante) +1;
+	memcpy(content, &info.idPedido, sizeof(uint32_t));
+	offset += sizeof(uint32_t);
+	memcpy(content, &tamanioRestaurante, sizeof(uint32_t));
+	offset += sizeof(uint32_t);
+	memcpy(content, info.nombreRestaurante, tamanioRestaurante);
+	offset += tamanioRestaurante;
+	free(info.nombreRestaurante);
+	return content;
+}
+void* serializarObtenerReceta(char* nombrePlato){
+	void* content = malloc(sizeof(uint32_t) + strlen(nombrePlato) +1);
+	int offset = 0;
+	uint32_t tamanioReceta = strlen(nombrePlato) +1;
+	memcpy(content, &tamanioReceta, sizeof(uint32_t));
+	offset += sizeof(uint32_t);
+	memcpy(content, nombrePlato, tamanioReceta);
+	offset += tamanioReceta;
+	free(nombrePlato);
+	return content;
+}
 
 /*t_buffer* serializarUnMensaje(t_list* parametros){
 	t_buffer* buffer = malloc(sizeof(t_buffer));

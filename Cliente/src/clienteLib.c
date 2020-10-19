@@ -18,7 +18,7 @@ t_log* crear_logger_cliente(char* path){
 	return log_aux;
 }
 
-bool sintaxisYSemanticaValida(char* mensaje, t_header* codigoOperacion, t_modulo* moduloDestino, t_list** parametros){
+bool sintaxisYSemanticaValida(char* mensaje, t_header* codigoOperacion, t_modulo* moduloDestino, t_list** parametros, t_log loggerCliente){
 	char* operacion;
 	char* destinatario;
 	*parametros = dividirMensajeEnPartes(&operacion,&destinatario,mensaje);
@@ -27,17 +27,22 @@ bool sintaxisYSemanticaValida(char* mensaje, t_header* codigoOperacion, t_modulo
 	if(validarMatcheoOperacion(operacion, codigoOperacion)){
 		if(validarMatcheoDestinatario(destinatario, moduloDestino)){
 			obtenerModulosCompatiblesYcantParametrosRequerida(*codigoOperacion,*moduloDestino,&modulosCompatibles,&cantParametros);
-			if(validarSemanticaMensaje(modulosCompatibles, cantParametros, *moduloDestino, *parametros)){
+			if(validarSemanticaMensaje(modulosCompatibles, cantParametros, *moduloDestino, *parametros, loggerCliente)){
 				list_destroy_and_destroy_elements(modulosCompatibles, free);
 				return 1;
 			}
 		}
-
+		else{
+			log_error(&loggerCliente, "Mensaje no valido: el modulo especificado \"%s\" no existe", destinatario);
+		}
 	}
+	else{
+		log_error(&loggerCliente, "Mensaje no valido: la operacion especificada \"%s\" no existe", operacion);
+	}
+
 	list_destroy_and_destroy_elements(modulosCompatibles, free);
 	return 0;
 }
-
 
 bool validarMatcheoOperacion(char* operacion, t_header* codigoALlenar){
 	if(strcmp(operacion, "consultarRestaurantes")==0){
@@ -253,9 +258,9 @@ void obtenerModulosCompatiblesYcantParametrosRequerida(t_header codigoOperacion,
 	}
 }
 
-bool validarSemanticaMensaje(t_list* modulosCompatibles, int cantParametros, t_modulo destinatario, t_list* parametros){
+bool validarSemanticaMensaje(t_list* modulosCompatibles, int cantParametros, t_modulo destinatario, t_list* parametros, t_log loggerCliente){
 	if(!(cantParametros == parametros->elements_count)){
-		printf("SE ESPERABA QUE EL MENSAJE TENGA %d PARAMETROS, Y TUVO %d PARAMETROS", cantParametros,parametros->elements_count);
+		log_error(&loggerCliente, "Mensaje no valido: se esperaba que el mensaje tenga %d parametros, Y TUVO %d parametros", cantParametros,parametros->elements_count);
 		return 0;
 	}
 
@@ -263,7 +268,7 @@ bool validarSemanticaMensaje(t_list* modulosCompatibles, int cantParametros, t_m
 		return *unModuloDeLaLista == destinatario;
 	}
 	if(!(list_any_satisfy(modulosCompatibles, (bool*) estaElDestEnLosCompatibles))){
-		printf("EL MENSAJE NO SE PUEDE MANDAR AL MODULO ESPECIFICADO");
+		log_error(&loggerCliente, "Mensaje no valido: la operacion especificada no se le puede mandar al modulo determinado");
 		return 0;
 	}
 		return 1;

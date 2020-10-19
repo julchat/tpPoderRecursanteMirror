@@ -35,8 +35,7 @@ typedef struct {
 
 typedef struct{
 	t_modulo idModulo;
-	uint32_t tamanioId;
-	char* idCliente;
+	uint32_t idCliente;
 	uint32_t posX;
 	uint32_t posY;
 }handshakeStruct;
@@ -47,12 +46,12 @@ t_log* crear_logger_cliente(char*);
 cliente_config* leer_config_cliente(char*);
 t_list* dividirMensajeEnPartes(char** operacion,char** destinatario,char* mensaje);
 void terminar_programa(int, t_log*, t_config*);
-bool sintaxisYSemanticaValida(char* mensaje, t_header* codigoOperacion, t_modulo* moduloDestino, t_list** parametros);
+bool sintaxisYSemanticaValida(char* mensaje, t_header* codigoOperacion, t_modulo* moduloDestino, t_list** parametros, t_log loggerCliente);
 bool validarMatcheoOperacion(char* operacion, t_header* codigoPasadoPorReferencia);
 bool validarMatcheoDestinatario(char* destinatario, t_modulo* moduloALlenar);
 void obtenerModulosCompatiblesYcantParametrosRequerida(t_header codigoOperacion,t_modulo moduloDestino,
 t_list** modulosCompatibles, int* cantParametros);
-bool validarSemanticaMensaje(t_list* modulosCompatibles, int cantParametros, t_modulo destinatario, t_list* parametros);
+bool validarSemanticaMensaje(t_list* modulosCompatibles, int cantParametros, t_modulo destinatario, t_list* parametros, t_log loggerCliente);
 bool estaEnLaLista(t_modulo* unElemento, t_list* unaLista);
 t_identificadorSocket* deserealizarRespuestaHandshake(t_message* paqueteRecibido);
 //t_message* recibirMensaje(int socket);
