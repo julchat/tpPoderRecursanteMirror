@@ -18,7 +18,7 @@ int main(int argc, char *argv[]){
 	//t_list* restaurantes = list_create();
 
 	esperar_conexion(comanda_configuracion->PUERTO_ESCUCHA,&socket_escucha,logger_comanda);
-	inicializar_frames;
+	//inicializar_frames;
 
 
 

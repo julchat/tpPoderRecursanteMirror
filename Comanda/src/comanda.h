@@ -22,13 +22,14 @@
 
 #include "commons/config.h"
 #include "commons/log.h"
+#include "comandaLib.h"
 
 
 
-extern comanda_config* comanda_configuracion;
-extern t_log* logger_comanda;
-extern int socket_escucha;
-extern void* memoria_principal;
-extern void* memoria_swap;
+comanda_config* comanda_configuracion;
+t_log* logger_comanda;
+int socket_escucha;
+void* memoria_principal;
+void* memoria_swap;
 
 #endif /* COMANDA_H_ */
